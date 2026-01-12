@@ -1,0 +1,32 @@
+## ANDROID SETUP REQUIRED
+
+Your Android Studio is installed at: C:\Program Files\Android\Android Studio
+Your Android SDK is at: C:\Users\kaart\AppData\Local\Android\Sdk
+
+### Next Steps:
+
+1. **Open Android Studio SDK Manager:**
+   - Tools → SDK Manager (or Configure → SDK Manager)
+
+2. **Install these components:**
+   - ✅ Android SDK Platform 34 (API Level 34)
+   - ✅ Android SDK Build-Tools 34.0.0
+   - ✅ Android SDK Command-line Tools (latest)
+   - ✅ NDK (Side by side)
+
+3. **After installing, run:**
+   ```powershell
+   npm run android:init
+   npm run build:android
+   ```
+
+### Environment Variables (Already Set):
+- ANDROID_HOME=C:\Users\kaart\AppData\Local\Android\Sdk
+- JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+
+### Build Commands:
+- `npm run android:init` - Initialize Android (one-time)
+- `npm run build:android` - Build APK
+- `npm run build:windows` - Build Windows app
+
+The APK will be copied to `public/downloads/flavor-town.apk` and available at `/download` page.

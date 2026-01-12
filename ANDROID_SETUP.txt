@@ -1,0 +1,38 @@
+## Prerequisites for Android Build
+
+### 1. Install Android Studio
+Download from: https://developer.android.com/studio
+
+### 2. Install Android SDK and Tools
+Open Android Studio → SDK Manager → Install:
+- Android SDK Platform 34
+- Android SDK Build-Tools 34.0.0
+- Android SDK Command-line Tools (latest)
+- Android SDK Platform-Tools
+- NDK (Side by side)
+
+### 3. Set Environment Variables
+Add to your system:
+```
+ANDROID_HOME=C:\Users\YourUsername\AppData\Local\Android\Sdk
+JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+```
+
+Add to PATH:
+```
+%ANDROID_HOME%\platform-tools
+%ANDROID_HOME%\cmdline-tools\latest\bin
+%JAVA_HOME%\bin
+```
+
+### 4. Accept Android Licenses
+```bash
+cd %ANDROID_HOME%\cmdline-tools\latest\bin
+sdkmanager --licenses
+```
+
+### 5. Build Commands
+After setup:
+```bash
+npm run build:android
+```
