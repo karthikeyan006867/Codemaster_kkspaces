@@ -10,42 +10,86 @@ export const pythonLessons: Lesson[] = [
     estimatedTime: 25,
     content: `# Welcome to Python Programming! 🐍
 
-Python is one of the most popular programming languages in the world!
+Python is one of the most popular and versatile programming languages in the world, used for web development, data science, AI, automation, and more!
 
 ## Your First Python Program
+
+Every Python journey starts with "Hello, World!":
 
 \`\`\`python
 print("Hello, World!")
 \`\`\`
 
-The \`print()\` function displays output.
+The \`print()\` function displays output to the console. You can print text, numbers, or variables.
 
-## Variables
+## Variables in Python
+
+Variables store data that you can reuse and manipulate:
+
+\`\`\`python
+# String variable
+name = "Alice"
+
+# Integer variable
+age = 25
+
+# Float variable
+height = 5.7
+
+# Boolean variable
+is_student = True
+\`\`\`
+
+**Key Points:**
+- Variables don't need type declarations (Python figures it out automatically)
+- Use descriptive names (e.g., \`user_age\` not \`x\`)
+- Follow snake_case convention for variable names
+
+## F-Strings (Formatted Strings)
+
+F-strings make it easy to insert variables into text:
 
 \`\`\`python
 name = "Alice"
 age = 25
-print(f"Hi, I'm {name}")
+print(f"Hi, I'm {name} and I'm {age} years old")
+# Output: Hi, I'm Alice and I'm 25 years old
+\`\`\`
+
+You can also do calculations inside f-strings:
+
+\`\`\`python
+print(f"Next year I'll be {age + 1} years old")
 \`\`\`
 
 ## Challenge
-Create variables for your name and age, then print a greeting using an f-string.`,
+Create variables for your name, age, and favorite hobby. Then print a personalized greeting using an f-string that includes all three!`,
     initialCode: `# Create your variables
 name = "Your Name"
 age = 20
+hobby = "coding"
 
 # Print greeting using f-string
-print(f"Hello, I'm {name} and I'm {age} years old")
+print(f"Hello! I'm {name}, I'm {age} years old, and I love {hobby}!")
 `,
     solution: `name = "Alice"
 age = 25
-print(f"Hello, I'm {name} and I'm {age} years old")`,
-    hints: ['Use f"..." for f-strings', 'Variables don\'t need quotes for numbers'],
+hobby = "programming"
+print(f"Hello! I'm {name}, I'm {age} years old, and I love {hobby}!")`,
+    hints: [
+      'Use f"..." for f-strings with curly braces {} for variables',
+      'String values need quotes, numbers don\'t',
+      'Make sure your greeting includes all three variables',
+      'Variables are case-sensitive: name vs Name are different'
+    ],
     testCases: [
       { name: 'Has output', test: (code: string, output: string) => output.trim().length > 0, errorMessage: 'Code must produce output' },
-      { name: 'Uses print', test: (code: string, output: string) => code.includes('print('), errorMessage: 'Use print() function' },
-      { name: 'Contains greeting', test: (code: string, output: string) => output.toLowerCase().includes('hello') || output.toLowerCase().includes('hi'), errorMessage: 'Output should contain a greeting' },
-      { name: 'Shows age', test: (code: string, output: string) => /\d+/.test(output), errorMessage: 'Output should show age (a number)' }
+      { name: 'Uses print', test: (code: string, output: string) => code.includes('print('), errorMessage: 'Must use print() function' },
+      { name: 'Creates variables', test: (code: string, output: string) => code.includes('name =') && code.includes('age ='), errorMessage: 'Must create name and age variables' },
+      { name: 'Uses f-string', test: (code: string, output: string) => code.includes('f"') || code.includes("f'"), errorMessage: 'Must use f-string formatting (f"...")' },
+      { name: 'Shows name', test: (code: string, output: string) => /[A-Za-z]{2,}/.test(output), errorMessage: 'Output should include a name (letters)' },
+      { name: 'Shows age', test: (code: string, output: string) => /\d+/.test(output), errorMessage: 'Output should show age (a number)' },
+      { name: 'Includes hobby', test: (code: string, output: string) => output.split(' ').length >= 8, errorMessage: 'Output should be descriptive and include your hobby' }
     ]
   },
   {
@@ -54,41 +98,112 @@ print(f"Hello, I'm {name} and I'm {age} years old")`,
     description: 'Perform calculations and use arithmetic operators',
     language: 'python' as const,
     difficulty: 'Beginner',
-    estimatedTime: 20,
+    estimatedTime: 25,
     content: `# Python Math Operations 🔢
 
+Python can perform all standard mathematical operations and more!
+
+## Basic Arithmetic Operators
+
 \`\`\`python
+# Addition
 result = 10 + 5    # 15
+
+# Subtraction
 result = 10 - 3    # 7
+
+# Multiplication
 result = 4 * 6     # 24
+
+# Division (always returns float)
 result = 20 / 4    # 5.0
-result = 2 ** 3    # 8 (power)
+
+# Floor Division (returns integer)
+result = 20 // 4   # 5
+result = 21 // 4   # 5 (rounds down)
+
+# Modulo (remainder)
+result = 17 % 5    # 2
+
+# Exponentiation (power)
+result = 2 ** 3    # 8 (2 to the power of 3)
+\`\`\`
+
+## Order of Operations
+
+Python follows PEMDAS (Parentheses, Exponents, Multiplication/Division, Addition/Subtraction):
+
+\`\`\`python
+result = 2 + 3 * 4      # 14 (multiplication first)
+result = (2 + 3) * 4    # 20 (parentheses first)
+result = 10 + 2 ** 3    # 18 (exponent first: 10 + 8)
+\`\`\`
+
+## Practical Examples
+
+\`\`\`python
+# Calculate area of a rectangle
+length = 10
+width = 5
+area = length * width
+print(f"Area: {area} square units")
+
+# Convert temperature from Celsius to Fahrenheit
+celsius = 25
+fahrenheit = (celsius * 9/5) + 32
+print(f"{celsius}°C = {fahrenheit}°F")
 \`\`\`
 
 ## Challenge
-Calculate and print: 50 + 25, 100 - 30, 8 * 7`,
-    initialCode: `# Perform calculations
-result1 = 50 + 25
-result2 = 100 - 30
-result3 = 8 * 7
+Create a calculator that performs multiple operations:
+1. Calculate 50 + 25
+2. Calculate 100 - 30
+3. Calculate 8 * 7
+4. Calculate 81 / 9
+5. Calculate 2 to the power of 5
 
-# Print results
-print(f"Addition: {result1}")
-print(f"Subtraction: {result2}")
-print(f"Multiplication: {result3}")
+Print each result with a descriptive label.`,
+    initialCode: `# Calculator Program
+
+# Perform calculations
+addition = 50 + 25
+subtraction = 100 - 30
+multiplication = 8 * 7
+division = 81 / 9
+power = 2 ** 5
+
+# Print results with labels
+print(f"Addition: 50 + 25 = {addition}")
+print(f"Subtraction: 100 - 30 = {subtraction}")
+print(f"Multiplication: 8 * 7 = {multiplication}")
+print(f"Division: 81 / 9 = {division}")
+print(f"Power: 2^5 = {power}")
 `,
-    solution: `result1 = 50 + 25
-result2 = 100 - 30
-result3 = 8 * 7
-print(f"Addition: {result1}")
-print(f"Subtraction: {result2}")
-print(f"Multiplication: {result3}")`,
-    hints: ['Use +, -, * for operations', 'Print each result'],
+    solution: `addition = 50 + 25
+subtraction = 100 - 30
+multiplication = 8 * 7
+division = 81 / 9
+power = 2 ** 5
+
+print(f"Addition: 50 + 25 = {addition}")
+print(f"Subtraction: 100 - 30 = {subtraction}")
+print(f"Multiplication: 8 * 7 = {multiplication}")
+print(f"Division: 81 / 9 = {division}")
+print(f"Power: 2^5 = {power}")`,
+    hints: [
+      'Use +, -, *, /, and ** for operations',
+      'Store each result in a variable',
+      'Use f-strings to print descriptive labels',
+      'Remember: 2 ** 5 means 2 to the power of 5'
+    ],
     testCases: [
       { name: 'Shows 75', test: (code: string, output: string) => output.includes('75'), errorMessage: 'Should show 50 + 25 = 75' },
       { name: 'Shows 70', test: (code: string, output: string) => output.includes('70'), errorMessage: 'Should show 100 - 30 = 70' },
       { name: 'Shows 56', test: (code: string, output: string) => output.includes('56'), errorMessage: 'Should show 8 * 7 = 56' },
-      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').length >= 3, errorMessage: 'Should print at least 3 lines' }
+      { name: 'Shows division', test: (code: string, output: string) => output.includes('9'), errorMessage: 'Should show 81 / 9 = 9' },
+      { name: 'Shows power', test: (code: string, output: string) => output.includes('32'), errorMessage: 'Should show 2^5 = 32' },
+      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').length >= 5, errorMessage: 'Should print at least 5 calculations' },
+      { name: 'Uses arithmetic', test: (code: string, output: string) => code.includes('+') && code.includes('*'), errorMessage: 'Must use arithmetic operators' }
     ]
   },
   {
@@ -98,114 +213,371 @@ print(f"Multiplication: {result3}")`,
     language: 'python' as const,
     difficulty: 'Beginner',
     estimatedTime: 30,
-    content: `# Conditionals 🤔
+    content: `# Conditionals - Making Decisions 🤔
+
+Conditionals allow your program to make decisions and execute different code based on conditions.
+
+## Basic If Statement
 
 \`\`\`python
 age = 18
 if age >= 18:
-    print("Adult")
+    print("You are an adult")
+\`\`\`
+
+**Important:** Python uses **indentation** (4 spaces or 1 tab) to define code blocks!
+
+## If-Else Statement
+
+\`\`\`python
+age = 16
+if age >= 18:
+    print("You can vote")
 else:
-    print("Minor")
+    print("Too young to vote")
+\`\`\`
+
+## If-Elif-Else Statement
+
+For multiple conditions:
+
+\`\`\`python
+score = 85
+
+if score >= 90:
+    print("Grade: A")
+elif score >= 80:
+    print("Grade: B")
+elif score >= 70:
+    print("Grade: C")
+else:
+    print("Grade: F")
+\`\`\`
+
+## Comparison Operators
+
+- \`==\` Equal to
+- \`!=\` Not equal to
+- \`>\` Greater than
+- \`<\` Less than
+- \`>=\` Greater than or equal to
+- \`<=\` Less than or equal to
+
+## Logical Operators
+
+Combine multiple conditions:
+
+\`\`\`python
+age = 20
+has_license = True
+
+if age >= 18 and has_license:
+    print("Can drive")
+
+# OR operator
+if age < 18 or age > 65:
+    print("Discounted ticket")
+
+# NOT operator
+if not has_license:
+    print("Need a license")
 \`\`\`
 
 ## Challenge
-Create a variable for age. If >= 18 print "Can vote", else print "Too young"`,
-    initialCode: `# Set age
+Create a voting eligibility checker:
+- Set an age variable
+- If age >= 18, print "Can vote"
+- If age >= 16 but < 18, print "Can pre-register"
+- Otherwise, print "Too young"`,
+    initialCode: `# Voting eligibility checker
 age = 20
 
-# Check voting eligibility
+# Check voting eligibility with if-elif-else
 if age >= 18:
     print("Can vote")
+elif age >= 16:
+    print("Can pre-register to vote")
 else:
-    print("Too young")
+    print("Too young to vote")
 `,
     solution: `age = 20
+
 if age >= 18:
     print("Can vote")
+elif age >= 16:
+    print("Can pre-register to vote")
 else:
-    print("Too young")`,
-    hints: ['Use if age >= 18:', 'Remember indentation!'],
+    print("Too young to vote")`,
+    hints: [
+      'Use if age >= 18: for adults',
+      'Use elif age >= 16: for pre-registration',
+      'Use else: for under 16',
+      'Remember: indentation is crucial in Python!',
+      'Check conditions from highest to lowest'
+    ],
     testCases: [
-      { name: 'Has if statement', test: (code: string, output: string) => code.includes('if'), errorMessage: 'Use if statement' },
-      { name: 'Checks age', test: (code: string, output: string) => />=?\s*18|18\s*<=?/.test(code), errorMessage: 'Check if age >= 18' },
-      { name: 'Has output', test: (code: string, output: string) => output.toLowerCase().includes('vote') || output.toLowerCase().includes('young'), errorMessage: 'Output should mention voting eligibility' }
+      { name: 'Has if statement', test: (code: string, output: string) => code.includes('if'), errorMessage: 'Must use if statement' },
+      { name: 'Has elif or else', test: (code: string, output: string) => code.includes('elif') || code.includes('else'), errorMessage: 'Should use elif or else for multiple conditions' },
+      { name: 'Checks age >= 18', test: (code: string, output: string) => />=?\s*18|18\s*<=?/.test(code), errorMessage: 'Must check if age >= 18' },
+      { name: 'Has output', test: (code: string, output: string) => output.length > 0, errorMessage: 'Code must produce output' },
+      { name: 'Mentions voting', test: (code: string, output: string) => output.toLowerCase().includes('vote') || output.toLowerCase().includes('young') || output.toLowerCase().includes('register'), errorMessage: 'Output should mention voting eligibility' }
     ]
   },
   {
     id: 'python-4',
-    title: 'Lists',
-    description: 'Work with Python lists',
+    title: 'Lists - Collections of Data',
+    description: 'Work with Python lists to store multiple values',
     language: 'python' as const,
     difficulty: 'Beginner',
-    estimatedTime: 30,
+    estimatedTime: 35,
     content: `# Python Lists 📋
+
+Lists are ordered, changeable collections that can store multiple items.
+
+## Creating Lists
+
+\`\`\`python
+# List of strings
+fruits = ["apple", "banana", "orange"]
+
+# List of numbers
+numbers = [1, 2, 3, 4, 5]
+
+# Mixed types (possible but not recommended)
+mixed = ["Hello", 42, True, 3.14]
+
+# Empty list
+empty = []
+\`\`\`
+
+## Accessing Elements
+
+Lists use **zero-based indexing** (first item is at index 0):
 
 \`\`\`python
 fruits = ["apple", "banana", "orange"]
-print(fruits[0])  # apple
-fruits.append("mango")
-print(len(fruits))  # 4
+
+print(fruits[0])   # apple (first item)
+print(fruits[1])   # banana (second item)
+print(fruits[-1])  # orange (last item)
+print(fruits[-2])  # banana (second to last)
+\`\`\`
+
+## List Methods
+
+\`\`\`python
+fruits = ["apple", "banana"]
+
+# Add item to end
+fruits.append("orange")
+print(fruits)  # ["apple", "banana", "orange"]
+
+# Insert at specific position
+fruits.insert(1, "mango")
+print(fruits)  # ["apple", "mango", "banana", "orange"]
+
+# Remove item
+fruits.remove("banana")
+
+# Get list length
+count = len(fruits)
+print(count)  # 3
+\`\`\`
+
+## Useful List Operations
+
+\`\`\`python
+numbers = [1, 2, 3, 4, 5]
+
+# Check if item exists
+if 3 in numbers:
+    print("Found it!")
+
+# Get min, max, sum
+print(min(numbers))  # 1
+print(max(numbers))  # 5
+print(sum(numbers))  # 15
 \`\`\`
 
 ## Challenge
-Create a list of 3 fruits, add one more, print the first fruit and total count`,
-    initialCode: `# Create list
-fruits = ["apple", "banana", "orange"]
+Create a shopping list:
+1. Start with ["milk", "bread", "eggs"]
+2. Add "cheese" to the list
+3. Add "butter" to the list
+4. Print the first item
+5. Print the total number of items`,
+    initialCode: `# Shopping list program
 
-# Add a fruit
-fruits.append("mango")
+# Create initial list
+shopping_list = ["milk", "bread", "eggs"]
 
-# Print first fruit and count
-print(f"First fruit: {fruits[0]}")
-print(f"Total fruits: {len(fruits)}")
+# Add items
+shopping_list.append("cheese")
+shopping_list.append("butter")
+
+# Print first item and total count
+print(f"First item: {shopping_list[0]}")
+print(f"Total items: {len(shopping_list)}")
 `,
-    solution: `fruits = ["apple", "banana", "orange"]
-fruits.append("mango")
-print(f"First fruit: {fruits[0]}")
-print(f"Total fruits: {len(fruits)}")`,
-    hints: ['Use .append() to add', 'Access with [0]', 'len() for count'],
+    solution: `shopping_list = ["milk", "bread", "eggs"]
+shopping_list.append("cheese")
+shopping_list.append("butter")
+
+print(f"First item: {shopping_list[0]}")
+print(f"Total items: {len(shopping_list)}")`,
+    hints: [
+      'Use square brackets [] to create a list',
+      'Use .append(item) to add items to the end',
+      'Access first item with [0]',
+      'Use len(list) to get the count',
+      'Remember: lists are zero-indexed!'
+    ],
     testCases: [
-      { name: 'Creates list', test: (code: string, output: string) => code.includes('[') && code.includes(']'), errorMessage: 'Create a list with []' },
-      { name: 'Shows count of 4', test: (code: string, output: string) => output.includes('4'), errorMessage: 'Should show 4 items after adding one' },
-      { name: 'Shows first item', test: (code: string, output: string) => !!output.toLowerCase().match(/apple|banana|orange|grape|mango/), errorMessage: 'Should show the first fruit' }
+      { name: 'Creates list', test: (code: string, output: string) => code.includes('[') && code.includes(']'), errorMessage: 'Must create a list with []' },
+      { name: 'Uses append', test: (code: string, output: string) => code.includes('.append('), errorMessage: 'Must use .append() to add items' },
+      { name: 'Shows count of 5', test: (code: string, output: string) => output.includes('5'), errorMessage: 'Should show 5 items after adding two more' },
+      { name: 'Shows first item', test: (code: string, output: string) => output.toLowerCase().includes('milk') || /[a-z]{3,}/.test(output), errorMessage: 'Should show the first item (milk or other)' },
+      { name: 'Uses indexing', test: (code: string, output: string) => code.includes('[0]'), errorMessage: 'Should access first item with [0]' },
+      { name: 'Uses len()', test: (code: string, output: string) => code.includes('len('), errorMessage: 'Should use len() to get count' }
     ]
   },
   {
     id: 'python-5',
-    title: 'Loops',
-    description: 'Repeat code with for loops',
+    title: 'Loops - Repeating Code',
+    description: 'Repeat code with for and while loops',
     language: 'python' as const,
     difficulty: 'Beginner',
-    estimatedTime: 35,
-    content: `# Loops 🔁
+    estimatedTime: 40,
+    content: `# Loops - Automation and Repetition 🔁
+
+Loops let you repeat code multiple times, which is essential for processing collections and automating tasks.
+
+## For Loops with range()
+
+The \`range()\` function generates a sequence of numbers:
 
 \`\`\`python
-for i in range(3):
-    print(i)  # 0, 1, 2
+# Print numbers 0 to 4
+for i in range(5):
+    print(i)
+# Output: 0, 1, 2, 3, 4
 
-numbers = [1, 2, 3]
+# Start and end
+for i in range(2, 6):
+    print(i)
+# Output: 2, 3, 4, 5
+
+# With step
+for i in range(0, 10, 2):
+    print(i)
+# Output: 0, 2, 4, 6, 8
+\`\`\`
+
+## For Loops with Lists
+
+Loop through each item in a list:
+
+\`\`\`python
+fruits = ["apple", "banana", "cherry"]
+
+for fruit in fruits:
+    print(f"I like {fruit}")
+
+# Output:
+# I like apple
+# I like banana
+# I like cherry
+\`\`\`
+
+## While Loops
+
+Repeat while a condition is true:
+
+\`\`\`python
+count = 0
+while count < 5:
+    print(count)
+    count += 1  # Increment by 1
+
+# Output: 0, 1, 2, 3, 4
+\`\`\`
+
+**Warning:** Make sure your while loop's condition eventually becomes False, or you'll create an infinite loop!
+
+## Practical Examples
+
+\`\`\`python
+# Sum all numbers in a list
+numbers = [1, 2, 3, 4, 5]
+total = 0
+
 for num in numbers:
-    print(num * 2)  # 2, 4, 6
+    total += num
+
+print(f"Sum: {total}")  # 15
+
+# Process each item
+prices = [10.99, 5.50, 3.25]
+for price in prices:
+    discounted = price * 0.9  # 10% off
+    print(f"Was ${price}, now ${discounted:.2f}")
+\`\`\`
+
+## Break and Continue
+
+Control loop flow:
+
+\`\`\`python
+# break - exit loop immediately
+for i in range(10):
+    if i == 5:
+        break  # Stop at 5
+    print(i)
+# Output: 0, 1, 2, 3, 4
+
+# continue - skip to next iteration
+for i in range(5):
+    if i == 2:
+        continue  # Skip 2
+    print(i)
+# Output: 0, 1, 3, 4
 \`\`\`
 
 ## Challenge
-Create a list [1, 2, 3, 4, 5] and print each number multiplied by 2`,
-    initialCode: `# Create list
+Create a program that:
+1. Creates a list of numbers [1, 2, 3, 4, 5]
+2. Loops through the list
+3. Multiplies each number by 2
+4. Prints each result`,
+    initialCode: `# Number doubling program
+
+# Create list of numbers
 numbers = [1, 2, 3, 4, 5]
 
-# Loop and print each * 2
+# Loop through and double each number
 for num in numbers:
-    print(num * 2)
+    doubled = num * 2
+    print(f"{num} doubled is {doubled}")
 `,
     solution: `numbers = [1, 2, 3, 4, 5]
+
 for num in numbers:
-    print(num * 2)`,
-    hints: ['Use for num in list:', 'Multiply with num * 2'],
+    doubled = num * 2
+    print(f"{num} doubled is {doubled}")`,
+    hints: [
+      'Use for num in numbers: to loop through the list',
+      'Multiply with num * 2 inside the loop',
+      'Print each result using f-strings',
+      'The loop body must be indented'
+    ],
     testCases: [
-      { name: 'Has for loop', test: (code: string, output: string) => code.includes('for '), errorMessage: 'Use a for loop' },
+      { name: 'Has for loop', test: (code: string, output: string) => code.includes('for '), errorMessage: 'Must use a for loop' },
+      { name: 'Loops through list', test: (code: string, output: string) => code.includes('in '), errorMessage: 'Should loop through a list with "for x in list"' },
       { name: 'Shows 2', test: (code: string, output: string) => output.includes('2'), errorMessage: 'Output should include 2 (1*2)' },
       { name: 'Shows 10', test: (code: string, output: string) => output.includes('10'), errorMessage: 'Output should include 10 (5*2)' },
-      { name: 'Multiple lines', test: (code: string, output: string) => output.split('\n').length >= 5, errorMessage: 'Should output 5 numbers' }
+      { name: 'Shows 4', test: (code: string, output: string) => output.includes('4'), errorMessage: 'Output should include 4 (2*2)' },
+      { name: 'Multiple lines', test: (code: string, output: string) => output.split('\n').filter(l => l.trim()).length >= 5, errorMessage: 'Should output 5 results' },
+      { name: 'Uses multiplication', test: (code: string, output: string) => code.includes('* 2') || code.includes('*2'), errorMessage: 'Should multiply by 2' }
     ]
   },
 
@@ -216,49 +588,135 @@ for num in numbers:
     description: 'Create and use functions to organize code',
     language: 'python' as const,
     difficulty: 'Beginner',
-    estimatedTime: 35,
-    content: `# Functions 🔧
+    estimatedTime: 40,
+    content: `# Functions - Building Reusable Code 🔧
 
-Functions let you reuse code!
+Functions are reusable blocks of code that perform specific tasks. They help organize code and avoid repetition.
 
-## Creating Functions
+## Defining Functions
+
 \`\`\`python
 def greet(name):
     return f"Hello, {name}!"
 
-print(greet("Alice"))  # Hello, Alice!
+# Call the function
+message = greet("Alice")
+print(message)  # Hello, Alice!
 \`\`\`
 
-## Function with Return
+**Function Syntax:**
+- \`def\` keyword to define
+- Function name (use snake_case)
+- Parameters in parentheses
+- Colon and indented code block
+- \`return\` to send back a value
+
+## Parameters and Arguments
+
 \`\`\`python
 def add(a, b):
+    """Add two numbers together"""
     return a + b
 
 result = add(5, 3)
 print(result)  # 8
+
+# Multiple parameters
+def describe_person(name, age, city):
+    return f"{name} is {age} years old and lives in {city}"
+
+print(describe_person("Bob", 30, "NYC"))
 \`\`\`
 
-## Challenge
-Create a function \`square(n)\` that returns n squared. Test it with numbers 1-5.`,
-    initialCode: `# Create function that squares a number
+## Default Parameters
+
+\`\`\`python
+def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+print(greet("Alice"))           # Hello, Alice!
+print(greet("Bob", "Hi"))       # Hi, Bob!
+\`\`\`
+
+## Return Values
+
+\`\`\`python
+# Return a single value
 def square(n):
     return n ** 2
 
-# Test your function
-for i in range(1, 6):
-    print(f"{i} squared = {square(i)}")
-`,
-    solution: `def square(n):
-    return n ** 2
+# Return multiple values
+def get_stats(numbers):
+    return min(numbers), max(numbers), sum(numbers)
 
+minimum, maximum, total = get_stats([1, 2, 3, 4, 5])
+print(f"Min: {minimum}, Max: {maximum}, Sum: {total}")
+\`\`\`
+
+## Functions Without Return
+
+\`\`\`python
+def print_greeting(name):
+    print(f"Welcome, {name}!")
+    # No return - function returns None
+
+print_greeting("Alice")
+\`\`\`
+
+## Practical Example
+
+\`\`\`python
+def calculate_discount(price, percent):
+    """Calculate price after discount"""
+    discount_amount = price * (percent / 100)
+    final_price = price - discount_amount
+    return final_price
+
+original = 100
+discounted = calculate_discount(original, 20)
+print(f"Original: ${original}, After 20% off: ${discounted}")
+# Output: Original: $100, After 20% off: $80.0
+\`\`\`
+
+## Challenge
+Create a function called \`cube(n)\` that returns n cubed (n³).
+Test it with numbers 1 through 5 and print each result.`,
+    initialCode: `# Create function that cubes a number
+def cube(n):
+    """Return n cubed (n to the power of 3)"""
+    return n ** 3
+
+# Test your function with numbers 1-5
+print("Cubing numbers 1-5:")
 for i in range(1, 6):
-    print(f"{i} squared = {square(i)}")`,
-    hints: ['Use def to define function', 'Return n ** 2 or n * n', 'Call function inside loop'],
+    result = cube(i)
+    print(f"{i} cubed = {result}")
+`,
+    solution: `def cube(n):
+    """Return n cubed (n to the power of 3)"""
+    return n ** 3
+
+print("Cubing numbers 1-5:")
+for i in range(1, 6):
+    result = cube(i)
+    print(f"{i} cubed = {result}")`,
+    hints: [
+      'Use def cube(n): to define the function',
+      'Return n ** 3 (n to the power of 3)',
+      'Call cube(i) inside the loop',
+      'Use f-strings to format output nicely',
+      'Expected results: 1, 8, 27, 64, 125'
+    ],
     testCases: [
-      { name: 'Has function', test: (code: string, output: string) => code.includes('def '), errorMessage: 'Must define a function with def' },
-      { name: 'Returns value', test: (code: string, output: string) => code.includes('return'), errorMessage: 'Function should return a value' },
-      { name: 'Shows squares', test: (code: string, output: string) => output.includes('1') && output.includes('25'), errorMessage: 'Should show 1 squared and 5 squared (25)' },
-      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').length >= 5, errorMessage: 'Should print 5 results' }
+      { name: 'Has function definition', test: (code: string, output: string) => code.includes('def '), errorMessage: 'Must define a function with def' },
+      { name: 'Function named cube', test: (code: string, output: string) => code.includes('def cube('), errorMessage: 'Function should be named cube' },
+      { name: 'Returns value', test: (code: string, output: string) => code.includes('return'), errorMessage: 'Function must return a value' },
+      { name: 'Uses exponentiation', test: (code: string, output: string) => code.includes('**') || code.includes('pow('), errorMessage: 'Should use ** or pow() for cubing' },
+      { name: 'Shows 1 cubed', test: (code: string, output: string) => output.includes('1'), errorMessage: 'Should show 1³ = 1' },
+      { name: 'Shows 8 (2 cubed)', test: (code: string, output: string) => output.includes('8'), errorMessage: 'Should show 2³ = 8' },
+      { name: 'Shows 27 (3 cubed)', test: (code: string, output: string) => output.includes('27'), errorMessage: 'Should show 3³ = 27' },
+      { name: 'Shows 125 (5 cubed)', test: (code: string, output: string) => output.includes('125'), errorMessage: 'Should show 5³ = 125' },
+      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').filter(l => l.trim()).length >= 5, errorMessage: 'Should print 5 results' }
     ]
   },
   {
@@ -267,116 +725,209 @@ for i in range(1, 6):
     description: 'Store and access data with dictionaries',
     language: 'python' as const,
     difficulty: 'Beginner',
-    estimatedTime: 35,
-    content: `# Dictionaries 📚
+    estimatedTime: 40,
+    content: `# Dictionaries - Structured Data Storage 📚
 
-Dictionaries store key-value pairs.
+Dictionaries store data as key-value pairs, making it easy to organize and access related information.
 
 ## Creating Dictionaries
+
 \`\`\`python
+# Dictionary with different data types
 person = {
     "name": "Alice",
     "age": 25,
-    "city": "NYC"
+    "city": "NYC",
+    "is_student": True
 }
 
 print(person["name"])  # Alice
 print(person["age"])   # 25
 \`\`\`
 
-## Adding and Modifying
+**Key Points:**
+- Use curly braces \`{}\`
+- Keys and values separated by \`:\`
+- Keys must be unique
+- Keys are usually strings
+- Values can be any data type
+
+## Accessing Dictionary Values
+
 \`\`\`python
-person["job"] = "Developer"  # Add new key
-person["age"] = 26           # Update value
+person = {"name": "Bob", "age": 30}
+
+# Access with square brackets
+print(person["name"])  # Bob
+
+# Safe access with .get()
+print(person.get("age"))      # 30
+print(person.get("email"))    # None (no error)
+print(person.get("email", "N/A"))  # N/A (default value)
+\`\`\`
+
+## Modifying Dictionaries
+
+\`\`\`python
+person = {"name": "Alice", "age": 25}
+
+# Update existing value
+person["age"] = 26
+
+# Add new key-value pair
+person["job"] = "Developer"
+person["email"] = "alice@email.com"
+
 print(person)
+# {'name': 'Alice', 'age': 26, 'job': 'Developer', 'email': 'alice@email.com'}
+\`\`\`
+
+## Dictionary Methods
+
+\`\`\`python
+person = {"name": "Alice", "age": 25, "city": "NYC"}
+
+# Get all keys
+keys = person.keys()
+print(list(keys))  # ['name', 'age', 'city']
+
+# Get all values
+values = person.values()
+print(list(values))  # ['Alice', 25, 'NYC']
+
+# Get key-value pairs
+items = person.items()
+for key, value in items:
+    print(f"{key}: {value}")
+
+# Check if key exists
+if "name" in person:
+    print("Name exists!")
+\`\`\`
+
+## Nested Dictionaries
+
+\`\`\`python
+students = {
+    "student1": {"name": "Alice", "grade": 90},
+    "student2": {"name": "Bob", "grade": 85}
+}
+
+print(students["student1"]["name"])  # Alice
+print(students["student2"]["grade"])  # 85
+\`\`\`
+
+## Practical Example
+
+\`\`\`python
+# Product inventory
+product = {
+    "id": 101,
+    "name": "Laptop",
+    "price": 999.99,
+    "in_stock": True,
+    "quantity": 15
+}
+
+print(f"Product: {product['name']}")
+print(f"Price: ${product['price']}")
+print(f"Available: {product['quantity']} units")
 \`\`\`
 
 ## Challenge
-Create a dictionary for a book with title, author, year, and pages. Print each value.`,
+Create a dictionary representing a book with these keys:
+- title
+- author
+- year
+- pages
+- rating (out of 5)
+
+Then print each value in a formatted way.`,
     initialCode: `# Create a book dictionary
 book = {
-    "title": "Python Guide",
-    "author": "John Doe",
+    "title": "Python Mastery",
+    "author": "Jane Smith",
     "year": 2024,
-    "pages": 350
+    "pages": 450,
+    "rating": 4.8
 }
 
-# Print each value
+# Print each value in a formatted way
 print(f"Title: {book['title']}")
 print(f"Author: {book['author']}")
-print(f"Year: {book['year']}")
+print(f"Published: {book['year']}")
 print(f"Pages: {book['pages']}")
+print(f"Rating: {book['rating']}/5.0")
 `,
     solution: `book = {
-    "title": "Python Guide",
-    "author": "John Doe",
+    "title": "Python Mastery",
+    "author": "Jane Smith",
     "year": 2024,
-    "pages": 350
+    "pages": 450,
+    "rating": 4.8
 }
 
 print(f"Title: {book['title']}")
 print(f"Author: {book['author']}")
-print(f"Year: {book['year']}")
-print(f"Pages: {book['pages']}")`,
-    hints: ['Use curly braces {} for dictionaries', 'Access with ["key"]', 'Strings need quotes, numbers don\'t'],
+print(f"Published: {book['year']}")
+print(f"Pages: {book['pages']}")
+print(f"Rating: {book['rating']}/5.0")`,
+    hints: [
+      'Use curly braces {} for dictionaries',
+      'Format: "key": value with colon separating them',
+      'Access values with ["key"]',
+      'String keys need quotes, number values don\'t',
+      'Use f-strings to format output nicely'
+    ],
     testCases: [
-      { name: 'Has dictionary', test: (code: string, output: string) => code.includes('{') && code.includes('}'), errorMessage: 'Must create a dictionary with {}' },
-      { name: 'Has keys', test: (code: string, output: string) => code.includes('"title"') || code.includes("'title'"), errorMessage: 'Dictionary should have keys like "title"' },
-      { name: 'Shows output', test: (code: string, output: string) => output.trim().length > 20, errorMessage: 'Should print dictionary values' },
-      { name: 'Multiple lines', test: (code: string, output: string) => output.split('\n').length >= 4, errorMessage: 'Should print at least 4 values' }
+      { name: 'Creates dictionary', test: (code: string, output: string) => code.includes('{') && code.includes('}') && code.includes(':'), errorMessage: 'Must create a dictionary with {} and key: value pairs' },
+      { name: 'Has title key', test: (code: string, output: string) => code.includes('"title"') || code.includes("'title'"), errorMessage: 'Dictionary should have "title" key' },
+      { name: 'Has author key', test: (code: string, output: string) => code.includes('"author"') || code.includes("'author'"), errorMessage: 'Dictionary should have "author" key' },
+      { name: 'Has year key', test: (code: string, output: string) => code.includes('"year"') || code.includes("'year'"), errorMessage: 'Dictionary should have "year" key' },
+      { name: 'Uses dictionary access', test: (code: string, output: string) => code.includes('["') || code.includes("[\'"), errorMessage: 'Must access dictionary values with ["key"]' },
+      { name: 'Shows output', test: (code: string, output: string) => output.trim().length > 50, errorMessage: 'Should print all dictionary values' },
+      { name: 'Multiple lines', test: (code: string, output: string) => output.split('\n').filter(l => l.trim()).length >= 5, errorMessage: 'Should print at least 5 formatted lines' },
+      { name: 'Shows number', test: (code: string, output: string) => /\d{2,}/.test(output), errorMessage: 'Output should include numbers like year or pages' }
     ]
   },
-  {
-    id: 'python-8',
-    title: 'String Methods - Text Manipulation',
-    description: 'Transform and manipulate strings',
-    language: 'python' as const,
-    difficulty: 'Beginner',
-    estimatedTime: 30,
-    content: `# String Methods 📝
+`,
+    initialCode: `# Text processing program
+text = "  python programming  "
 
-Python has many built-in string methods.
-
-## Common Methods
-\`\`\`python
-text = "  Hello World  "
-
-print(text.upper())      # HELLO WORLD
-print(text.lower())      # hello world
-print(text.strip())      # Hello World (removes spaces)
-print(text.replace("World", "Python"))  # Hello Python
-\`\`\`
-
-## Checking Strings
-\`\`\`python
-text = "hello"
-print(text.startswith("he"))  # True
-print(text.endswith("lo"))    # True
-print("123".isdigit())         # True
-\`\`\`
-
-## Challenge
-Create a name variable, then print it in uppercase, lowercase, and capitalized.`,
-    initialCode: `# String manipulation
-name = "python programming"
+# Remove whitespace
+cleaned = text.strip()
 
 # Print in different cases
-print(f"Uppercase: {name.upper()}")
-print(f"Lowercase: {name.lower()}")
-print(f"Title Case: {name.title()}")
-print(f"Length: {len(name)}")
+print(f"Uppercase: {cleaned.upper()}")
+print(f"Lowercase: {cleaned.lower()}")
+print(f"Title Case: {cleaned.title()}")
+print(f"Length: {len(cleaned)} characters")
+print(f"Letter 'p' appears: {cleaned.lower().count('p')} times")
 `,
-    solution: `name = "python programming"
+    solution: `text = "  python programming  "
+cleaned = text.strip()
 
-print(f"Uppercase: {name.upper()}")
-print(f"Lowercase: {name.lower()}")
-print(f"Title Case: {name.title()}")
-print(f"Length: {len(name)}")`,
-    hints: ['Use .upper() for uppercase', 'Use .lower() for lowercase', 'Use .title() for title case', 'len() gets string length'],
+print(f"Uppercase: {cleaned.upper()}")
+print(f"Lowercase: {cleaned.lower()}")
+print(f"Title Case: {cleaned.title()}")
+print(f"Length: {len(cleaned)} characters")
+print(f"Letter 'p' appears: {cleaned.lower().count('p')} times")`,
+    hints: [
+      'Use .strip() to remove whitespace',
+      'Use .upper() for uppercase, .lower() for lowercase',
+      'Use .title() for title case',
+      'len() gives the string length',
+      'Use .count(letter) to count occurrences',
+      'Convert to lowercase before counting for accuracy'
+    ],
     testCases: [
-      { name: 'Uses string methods', test: (code: string, output: string) => code.includes('.upper') || code.includes('.lower') || code.includes('.title'), errorMessage: 'Must use string methods like .upper() or .lower()' },
-      { name: 'Shows uppercase', test: (code: string, output: string) => /[A-Z]{5,}/.test(output), errorMessage: 'Should show uppercase text' },
-      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').length >= 3, errorMessage: 'Should print multiple transformations' }
+      { name: 'Uses strip', test: (code: string, output: string) => code.includes('.strip'), errorMessage: 'Must use .strip() to remove whitespace' },
+      { name: 'Uses string methods', test: (code: string, output: string) => code.includes('.upper') && (code.includes('.lower') || code.includes('.title')), errorMessage: 'Must use multiple string methods (.upper, .lower, .title)' },
+      { name: 'Shows UPPERCASE', test: (code: string, output: string) => output.includes('PYTHON PROGRAMMING'), errorMessage: 'Should show text in UPPERCASE' },
+      { name: 'Shows Title Case', test: (code: string, output: string) => output.includes('Python Programming'), errorMessage: 'Should show Title Case' },
+      { name: 'Shows length', test: (code: string, output: string) => output.includes('18') || output.includes('Length'), errorMessage: 'Should show string length (18)' },
+      { name: 'Counts letter p', test: (code: string, output: string) => output.includes('3') && code.includes('.count'), errorMessage: 'Should count letter p (appears 3 times)' },
+      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').filter(l => l.trim()).length >= 5, errorMessage: 'Should print at least 5 different outputs' }
     ]
   },
   {
@@ -438,86 +989,183 @@ print(f"Their cubes: {cubes}")`,
       { name: 'Shows 216', test: (code: string, output: string) => output.includes('216'), errorMessage: 'Should include 216 (6³)' }
     ]
   },
-  {
-    id: 'python-10',
-    title: 'Tuples',
-    description: 'Learn immutable sequences with tuples',
-    language: 'python' as const,
-    difficulty: 'Beginner',
-    estimatedTime: 25,
-    content: `# Tuples in Python
-
-Tuples are immutable sequences - once created, they cannot be changed.
-
-## Creating Tuples
-\`\`\`python
-# Create a tuple with parentheses
-coordinates = (10, 20)
-colors = ("red", "green", "blue")
-
-# Tuples can hold mixed types
-mixed = (1, "hello", 3.14, True)
-\`\`\`
-
-## Accessing Elements
-\`\`\`python
-point = (5, 10, 15)
-print(point[0])  # 5
-print(point[2])  # 15
-\`\`\`
-
-## Challenge
-Create a tuple of your favorite numbers and print the first and last elements.`,
-    initialCode: `# Create a tuple of numbers
-numbers = (10, 20, 30, 40, 50)
-
-# Print first element
-print(numbers[0])
-
-# Print last element
-print(numbers[4])
 `,
-    solution: `numbers = (10, 20, 30, 40, 50)
-print(numbers[0])
-print(numbers[4])`,
-    hints: ['Use parentheses () to create tuples', 'Access elements with [index]', 'Last element is at index 4'],
+    initialCode: `# RGB Color Tuple Program
+
+# Create RGB tuple
+color = (255, 128, 0)  # Orange color
+
+# Unpack into variables
+r, g, b = color
+
+# Print each component
+print(f"Red: {r}")
+print(f"Green: {g}")
+print(f"Blue: {b}")
+print(f"Tuple length: {len(color)}")
+
+# Create and unpack coordinates
+coordinates = (40.7128, -74.0060)
+latitude, longitude = coordinates
+print(f"Location: {latitude}°N, {longitude}°W")
+`,
+    solution: `color = (255, 128, 0)
+r, g, b = color
+
+print(f"Red: {r}")
+print(f"Green: {g}")
+print(f"Blue: {b}")
+print(f"Tuple length: {len(color)}")
+
+coordinates = (40.7128, -74.0060)
+latitude, longitude = coordinates
+print(f"Location: {latitude}°N, {longitude}°W")`,
+    hints: [
+      'Use parentheses () to create tuples',
+      'Unpack tuple with: r, g, b = color',
+      'Access elements with indexing or unpacking',
+      'Use len() to get tuple length',
+      'Tuples are comma-separated values',
+      'Print using f-strings for nice formatting'
+    ],
     testCases: [
-      { name: 'Has tuple', test: (code: string, output: string) => code.includes('(') && code.includes(')'), errorMessage: 'Create a tuple with ()' },
-      { name: 'Has output', test: (code: string, output: string) => output.trim().length > 0, errorMessage: 'Code must produce output' },
-      { name: 'Prints first element', test: (code: string, output: string) => output.includes('10'), errorMessage: 'Print the first element' }
+      { name: 'Creates tuple', test: (code: string, output: string) => code.includes('(') && code.includes(')') && code.includes(','), errorMessage: 'Must create tuple with parentheses and commas' },
+      { name: 'Uses unpacking', test: (code: string, output: string) => /[a-z]+,\s*[a-z]+,\s*[a-z]+\s*=/.test(code), errorMessage: 'Should unpack tuple into variables (e.g., r, g, b = color)' },
+      { name: 'Shows 255', test: (code: string, output: string) => output.includes('255'), errorMessage: 'Should show red value (255)' },
+      { name: 'Shows 128', test: (code: string, output: string) => output.includes('128'), errorMessage: 'Should show green value (128)' },
+      { name: 'Shows length', test: (code: string, output: string) => output.includes('3') && code.includes('len('), errorMessage: 'Should show tuple length (3)' },
+      { name: 'Multiple tuples', test: (code: string, output: string) => (code.match(/\(/g) || []).length >= 2, errorMessage: 'Should create at least 2 tuples' },
+      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').filter(l => l.trim()).length >= 5, errorMessage: 'Should print at least 5 lines of output' }
     ]
   },
   {
     id: 'python-11',
-    title: 'Sets',
+    title: 'Sets - Unique Collections',
     description: 'Work with unique collections using sets',
     language: 'python' as const,
     difficulty: 'Beginner',
-    estimatedTime: 25,
-    content: `# Sets in Python
+    estimatedTime: 35,
+    content: `# Sets - Unique Collections 📦
 
-Sets are unordered collections of unique elements.
+Sets are unordered collections that store only **unique** elements. Duplicates are automatically removed!
 
 ## Creating Sets
+
 \`\`\`python
+# Create a set with curly braces
 fruits = {"apple", "banana", "cherry"}
 numbers = {1, 2, 3, 4, 5}
+
+# Create set from list (removes duplicates)
+list_with_dupes = [1, 2, 2, 3, 3, 3, 4]
+unique_nums = set(list_with_dupes)
+print(unique_nums)  # {1, 2, 3, 4}
+
+# Empty set (must use set(), not {})
+empty_set = set()
+\`\`\`
+
+## Set Methods
+
+\`\`\`python
+colors = {"red", "blue"}
+
+# Add element
+colors.add("green")
+print(colors)  # {"red", "blue", "green"}
+
+# Remove element
+colors.remove("blue")
+
+# Check membership
+if "red" in colors:
+    print("Red is in the set!")
+
+# Get set length
+print(len(colors))  # 2
+\`\`\`
+
+## Set Operations
+
+\`\`\`python
+a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+
+# Union (all elements from both)
+print(a | b)  # {1, 2, 3, 4, 5, 6}
+
+# Intersection (common elements)
+print(a & b)  # {3, 4}
+
+# Difference (in a but not in b)
+print(a - b)  # {1, 2}
+\`\`\`
+
+## Practical Use - Remove Duplicates
+
+\`\`\`python
+# Remove duplicates from a list
+numbers = [1, 2, 2, 3, 3, 3, 4, 4, 5]
+unique = list(set(numbers))
+print(unique)  # [1, 2, 3, 4, 5]
 \`\`\`
 
 ## Challenge
-Create a set and print its contents.`,
-    initialCode: `# Create a set of colors
-colors = {"red", "blue", "green"}
+Create two sets, add elements, find common elements, and count unique values.`,
+    initialCode: `# Working with sets
 
-# Print the set
-print(colors)
+# Create sets
+set1 = {1, 2, 3, 4, 5}
+set2 = {4, 5, 6, 7, 8}
+
+# Add element to set1
+set1.add(6)
+
+# Find common elements (intersection)
+common = set1 & set2
+
+# Print results
+print(f"Set 1: {set1}")
+print(f"Set 2: {set2}")
+print(f"Common elements: {common}")
+print(f"Total unique in set1: {len(set1)}")
+
+# Remove duplicates from list
+duplicates = [1, 1, 2, 2, 3, 3, 4, 4]
+unique_list = list(set(duplicates))
+print(f"Unique values: {unique_list}")
 `,
-    solution: `colors = {"red", "blue", "green"}
-print(colors)`,
-    hints: ['Use curly braces {} for sets', 'Sets contain unique elements'],
+    solution: `set1 = {1, 2, 3, 4, 5}
+set2 = {4, 5, 6, 7, 8}
+
+set1.add(6)
+common = set1 & set2
+
+print(f"Set 1: {set1}")
+print(f"Set 2: {set2}")
+print(f"Common elements: {common}")
+print(f"Total unique in set1: {len(set1)}")
+
+duplicates = [1, 1, 2, 2, 3, 3, 4, 4]
+unique_list = list(set(duplicates))
+print(f"Unique values: {unique_list}")`,
+    hints: [
+      'Use curly braces {} for sets',
+      'Sets automatically remove duplicates',
+      'Use .add() to add elements',
+      'Use & for intersection (common elements)',
+      'Use len() to count set elements',
+      'Convert list to set to remove duplicates'
+    ],
     testCases: [
-      { name: 'Has output', test: (code: string, output: string) => output.trim().length > 0, errorMessage: 'Code must produce output' },
-      { name: 'Uses Python syntax', test: (code: string, output: string) => !code.includes('//') && (code.includes('print(') || code.includes('=')), errorMessage: 'Use proper Python syntax' }
+      { name: 'Creates sets', test: (code: string, output: string) => code.includes('{') && code.includes('}'), errorMessage: 'Must create sets with curly braces' },
+      { name: 'Uses add method', test: (code: string, output: string) => code.includes('.add('), errorMessage: 'Should use .add() to add elements' },
+      { name: 'Finds intersection', test: (code: string, output: string) => code.includes('&') || code.includes('.intersection'), errorMessage: 'Must find common elements using & or .intersection()' },
+      { name: 'Shows set1', test: (code: string, output: string) => /Set 1.*[1-6]/.test(output), errorMessage: 'Should display Set 1' },
+      { name: 'Shows common elements', test: (code: string, output: string) => output.includes('Common') || (output.includes('4') && output.includes('5') && output.includes('6')), errorMessage: 'Should show common elements (4, 5, 6)' },
+      { name: 'Uses len()', test: (code: string, output: string) => code.includes('len('), errorMessage: 'Should use len() to count elements' },
+      { name: 'Removes duplicates', test: (code: string, output: string) => code.includes('set(') && code.includes('list('), errorMessage: 'Should convert list to set to remove duplicates' },
+      { name: 'Multiple outputs', test: (code: string, output: string) => output.split('\n').filter(l => l.trim()).length >= 5, errorMessage: 'Should print at least 5 lines of output' }
     ]
   },
   {
