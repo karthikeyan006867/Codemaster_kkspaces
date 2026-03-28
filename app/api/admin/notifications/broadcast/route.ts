@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'message required' }, { status: 400 })
     }
 
-    const users = await clerkClient.users.getUserList({ limit: 500 })
+    const users = await (await clerkClient()).users.getUserList({ limit: 500 })
     
     const notification = {
       id: `broadcast-${Date.now()}`,
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         const notifications = metadata.notifications || []
         notifications.push(notification)
 
-        await clerkClient.users.updateUserMetadata(u.id, {
+        await (await clerkClient()).users.updateUserMetadata(u.id, {
           publicMetadata: {
             ...metadata,
             notifications

@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId required' }, { status: 400 })
     }
 
-    await clerkClient.users.updateUser(userId, {
+    await (await clerkClient()).users.updateUser(userId, {
       publicMetadata: {
         banned: !!banned,
         bannedReason: reason || '',

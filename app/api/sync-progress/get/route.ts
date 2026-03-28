@@ -10,7 +10,7 @@ export async function GET() {
     }
 
     // Fetch fresh user data from Clerk
-    const user = await clerkClient.users.getUser(userId)
+    const user = await (await clerkClient()).users.getUser(userId)
     const metadata = user.publicMetadata || {}
 
     return NextResponse.json({

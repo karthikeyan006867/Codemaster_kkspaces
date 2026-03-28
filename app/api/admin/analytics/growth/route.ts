@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const days = parseInt(searchParams.get('days') || '30')
 
-    const users = await clerkClient.users.getUserList({ limit: 500 })
+    const users = await (await clerkClient()).users.getUserList({ limit: 500 })
     
     const dailySignups: any = {}
     const now = new Date()

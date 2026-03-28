@@ -31,7 +31,7 @@ export async function POST(request: Request) {
           continue
         }
 
-        const targetUser = await clerkClient.users.getUser(userId)
+        const targetUser = await (await clerkClient()).users.getUser(userId)
         const currentMetadata = targetUser.publicMetadata as any || {}
 
         let newMetadata
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         newMetadata.importedAt = new Date().toISOString()
         newMetadata.importedBy = email
 
-        await clerkClient.users.updateUserMetadata(userId, {
+        await (await clerkClient()).users.updateUserMetadata(userId, {
           publicMetadata: newMetadata
         })
 

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     let targetUserIds = userIds || []
 
     if (sendToAll) {
-      const users = await clerkClient.users.getUserList({ limit: 500 })
+      const users = await (await clerkClient()).users.getUserList({ limit: 500 })
       targetUserIds = users.data.map(u => u.id)
     }
 

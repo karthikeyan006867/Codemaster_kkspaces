@@ -8,7 +8,7 @@ export const GET = withApiSecurity(
       const userId = await getAuthenticatedUserId(request)
 
       // Fetch all users from Clerk with pagination limit
-      const { data: clerkUsers } = await clerkClient.users.getUserList({
+      const { data: clerkUsers } = await (await clerkClient()).users.getUserList({
         limit: 500
       })
 

@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId and points required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const currentMetadata = targetUser.publicMetadata as any || {}
     const currentPoints = currentMetadata.points || 0
 
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       newPoints = Math.max(0, currentPoints - points)
     }
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: {
         ...currentMetadata,
         points: newPoints,

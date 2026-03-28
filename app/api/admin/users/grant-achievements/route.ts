@@ -19,13 +19,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId and achievementIds array required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const currentMetadata = targetUser.publicMetadata as any || {}
     const currentAchievements = currentMetadata.achievements || []
     
     const updatedAchievements = Array.from(new Set([...currentAchievements, ...achievementIds]))
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: {
         ...currentMetadata,
         achievements: updatedAchievements,

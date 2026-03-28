@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { resetType = 'points' } = body
 
-    const users = await clerkClient.users.getUserList({ limit: 500 })
+    const users = await (await clerkClient()).users.getUserList({ limit: 500 })
     
     let successCount = 0
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         metadata.leaderboardReset = new Date().toISOString()
         metadata.leaderboardResetBy = email
 
-        await clerkClient.users.updateUserMetadata(u.id, {
+        await (await clerkClient()).users.updateUserMetadata(u.id, {
           publicMetadata: metadata
         })
         successCount++

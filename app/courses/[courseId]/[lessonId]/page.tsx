@@ -22,34 +22,27 @@ export default function LessonPage({
   const course = courses.find(c => c.id === params.courseId)
   const lesson = course?.lessons.find(l => l.id === params.lessonId)
   
-  const { completeLesson, isLessonCompleted, isLessonUnlocked, setUserId, loadProgressFromServer } = useProgressStore()
+  const { completeLesson, isLessonCompleted, isLessonUnlocked, setUserId, loadProgressFromServer, isProgressLoaded } = useProgressStore()
   const { settings } = useSettingsStore()
   const [showHints, setShowHints] = useState(settings.showHintsAutomatically)
   const [completed, setCompleted] = useState(false)
-  const [isUnlocked, setIsUnlocked] = useState(true)
+  const [isUnlocked, setIsUnlocked] = useState(false)
   const router = useRouter()
 
   // Load user progress from server when user is loaded
   useEffect(() => {
     if (isLoaded && user) {
       setUserId(user.id)
-      // Load progress from server only once when user loads
-      loadProgressFromServer()
+      void loadProgressFromServer()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, user])
 
   useEffect(() => {
-    if (lesson) {
+    if (lesson && isProgressLoaded) {
       const isCompleted = isLessonCompleted(lesson.id)
       const isUnlockedNow = isLessonUnlocked(lesson.id, params.courseId)
-      
-      console.log('Lesson status check:', {
-        lessonId: lesson.id,
-        completed: isCompleted,
-        unlocked: isUnlockedNow
-      })
-      
+
       setCompleted(isCompleted)
       setIsUnlocked(isUnlockedNow)
       
@@ -58,7 +51,7 @@ export default function LessonPage({
         router.push(`/courses/${params.courseId}`)
       }
     }
-  }, [lesson, isLessonCompleted, isLessonUnlocked, params.courseId, router])
+  }, [lesson, isLessonCompleted, isLessonUnlocked, params.courseId, router, isProgressLoaded])
 
   // Auto-expand hints if setting is enabled
   useEffect(() => {
@@ -67,6 +60,24 @@ export default function LessonPage({
 
   if (!course || !lesson) {
     notFound()
+  }
+
+  if (!isProgressLoaded) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <Sidebar />
+        <main className="ml-0 md:ml-64 pt-16 transition-all duration-300">
+          <div className="max-w-4xl mx-auto px-4 py-16 text-center text-gray-300">
+            Loading lesson progress...
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  if (!isUnlocked) {
+    return null
   }
 
   const currentIndex = course.lessons.findIndex(l => l.id === lesson.id)

@@ -10,6 +10,7 @@ interface CourseProgress {
 
 interface ProgressState {
   userId: string | null // Track which user this progress belongs to
+  isProgressLoaded: boolean
   completedLessons: string[] // Array of lesson IDs
   completedChallenges: string[] // Array of challenge IDs
   unlockedAchievements: string[] // Array of achievement IDs
@@ -54,6 +55,7 @@ export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
       userId: null,
+      isProgressLoaded: false,
       completedLessons: [], // Start empty for new users
       completedChallenges: [], // Start empty for new users
       unlockedAchievements: [], // Start empty for new users
@@ -75,12 +77,12 @@ export const useProgressStore = create<ProgressState>()(
         if (currentUserId && currentUserId !== userId) {
           get().clearProgress()
         }
-        set({ userId })
+        set({ userId, isProgressLoaded: false })
       },
 
       loadProgressFromServer: async () => {
         try {
-          console.log('Loading progress from server...')
+          set({ isProgressLoaded: false })
           const response = await fetch('/api/sync-progress/get', {
             cache: 'no-store', // Force fresh data on every request
             headers: {
@@ -89,10 +91,10 @@ export const useProgressStore = create<ProgressState>()(
           })
           if (response.ok) {
             const data = await response.json()
-            console.log('Progress loaded from server:', data)
             if (data.success && data.progress) {
               const progress = data.progress
               set({
+                isProgressLoaded: true,
                 completedLessons: progress.completedLessons || [],
                 completedChallenges: progress.completedChallenges || [],
                 unlockedAchievements: progress.achievements || [],
@@ -102,19 +104,21 @@ export const useProgressStore = create<ProgressState>()(
                 timeSpent: progress.timeSpent || 0,
                 lastStudyDate: progress.lastStudyDate || '',
               })
-              
-              console.log('State updated with server data')
-              
+
               // Recalculate all course progress
               courses.forEach(course => {
                 get().updateCourseProgress(course.id)
               })
+            } else {
+              set({ isProgressLoaded: true })
             }
           } else {
             console.error('Failed to load progress:', response.status)
+            set({ isProgressLoaded: true })
           }
         } catch (error) {
           console.error('Failed to load progress from server:', error)
+          set({ isProgressLoaded: true })
         }
       },
 
@@ -126,6 +130,7 @@ export const useProgressStore = create<ProgressState>()(
 
       clearProgress: () => {
         set({
+          isProgressLoaded: false,
           completedLessons: [],
           completedChallenges: [],
           unlockedAchievements: [],

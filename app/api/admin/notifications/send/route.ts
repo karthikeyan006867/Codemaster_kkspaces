@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId and message required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const currentMetadata = targetUser.publicMetadata as any || {}
     const notifications = currentMetadata.notifications || []
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       read: false
     })
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: {
         ...currentMetadata,
         notifications

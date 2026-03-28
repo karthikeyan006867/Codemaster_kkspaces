@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     for (const userId of userIds) {
       try {
-        await clerkClient.users.deleteUser(userId)
+        await (await clerkClient()).users.deleteUser(userId)
         results.push({ userId, success: true })
       } catch (error) {
         errors.push({ 

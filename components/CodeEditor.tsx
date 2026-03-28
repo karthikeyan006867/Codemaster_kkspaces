@@ -29,16 +29,39 @@ export default function CodeEditor({
   const [testResults, setTestResults] = useState<{ name: string; passed: boolean; error?: string }[]>([])
   const [allTestsPassed, setAllTestsPassed] = useState(false)
 
+  const draftKey = `lesson-draft:${language}:${initialCode.slice(0, 120)}`
+
+  useEffect(() => {
+    setTestPassed(null)
+    setTestResults([])
+    setAllTestsPassed(false)
+    setOutput('Click "Run" to execute your code')
+
+    try {
+      const savedDraft = localStorage.getItem(draftKey)
+      setCode(savedDraft ?? initialCode)
+    } catch {
+      setCode(initialCode)
+    }
+  }, [draftKey, initialCode])
+
   // Auto-save functionality
   useEffect(() => {
-    if (settings.autoSave && code !== initialCode) {
+    if (settings.autoSave) {
       const timer = setTimeout(() => {
-        // Auto-save logic (could save to localStorage or trigger parent callback)
-        console.log('Auto-saved code')
+        try {
+          if (code && code !== initialCode) {
+            localStorage.setItem(draftKey, code)
+          } else {
+            localStorage.removeItem(draftKey)
+          }
+        } catch {
+          // Ignore storage failures in restricted browser contexts.
+        }
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [code, settings.autoSave, initialCode])
+  }, [code, settings.autoSave, initialCode, draftKey])
 
   const getLanguageMode = () => {
     switch (language.toLowerCase()) {
@@ -1534,6 +1557,11 @@ export default function CodeEditor({
   }
 
   const resetCode = () => {
+    try {
+      localStorage.removeItem(draftKey)
+    } catch {
+      // Ignore storage failures in restricted browser contexts.
+    }
     setCode(initialCode)
     setOutput('Click "Run" to execute your code') // Reset to instruction
     setTestPassed(null)

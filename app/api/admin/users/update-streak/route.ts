@@ -19,10 +19,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId and streak required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const currentMetadata = targetUser.publicMetadata as any || {}
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: {
         ...currentMetadata,
         streak: Math.max(0, streak),

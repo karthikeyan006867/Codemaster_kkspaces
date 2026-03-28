@@ -30,7 +30,7 @@ interface Certificate {
 export default function CertificationsPage() {
   const { user, isLoaded } = useUser()
   const [viewingCert, setViewingCert] = useState<Certificate | null>(null)
-  const { courseProgress, setUserId, loadProgressFromServer } = useProgressStore()
+  const { courseProgress, completedLessons, setUserId, loadProgressFromServer } = useProgressStore()
 
   // Load user progress from server when user is loaded
   useEffect(() => {
@@ -49,7 +49,6 @@ export default function CertificationsPage() {
       const progress = courseProgress[course.id] || { completed: 0, total: course.lessons.length, percentage: 0 }
       
       const userMetadata = user.publicMetadata as any || {}
-      const completedLessons = userMetadata.completedLessons || []
       
       // Separate project lessons from regular lessons
       const regularLessons = course.lessons.filter(l => !l.isProject)
@@ -63,16 +62,15 @@ export default function CertificationsPage() {
       
       // Check if user passed the certification test
       const testAttempts = userMetadata.testAttempts || {}
-      const courseTest = testAttempts[course.id] || { passed: false, bestScore: 0 }
+      const courseTest = testAttempts[course.id] || { passed: false, bestScore: 0, lastAttempt: null }
       const testPassed = courseTest.passed
       const testScore = courseTest.bestScore || 0
       
       // Certificate is earned if:
-      // - 90%+ lessons completed OR all lessons complete
+      // - All lessons completed
       // - Project completed (if exists)
-      // - Test passed with 90%+ score
-      const highProgress = progress.percentage >= 90
-      const isCompleted = highProgress && projectCompleted && (testPassed || testScore >= 90)
+      // - Certification test passed
+      const isCompleted = allLessonsCompleted && projectCompleted && testPassed
       
       // Generate credential ID
       const courseCode = course.id.toUpperCase().substring(0, 3)
@@ -88,7 +86,7 @@ export default function CertificationsPage() {
         title: course.title,
         description: course.description,
         courseId: course.id,
-        issueDate: isCompleted ? new Date().toISOString() : '',
+        issueDate: isCompleted ? (courseTest.lastAttempt || new Date().toISOString()) : '',
         credentialId: credentialId,
         verificationUrl: isCompleted ? `https://verify.codemaster.com/${credentialId}` : '',
         skills: skills,
@@ -100,7 +98,7 @@ export default function CertificationsPage() {
         testScore
       }
     })
-  }, [courseProgress, user])
+  }, [courseProgress, completedLessons, user])
 
   const earnedCerts = certificates.filter(c => c.earned)
   const inProgressCerts = certificates.filter(c => !c.earned)
@@ -149,7 +147,9 @@ export default function CertificationsPage() {
                 day: 'numeric' 
               })}
               credentialId={viewingCert.credentialId}
-              skills={viewingCert.skills}              testScore={viewingCert.testScore}              onDownload={() => downloadCertificate(viewingCert)}
+              skills={viewingCert.skills}
+              testScore={viewingCert.testScore}
+              onDownload={() => downloadCertificate(viewingCert)}
               onShare={() => shareCertificate(viewingCert)}
             />
           </div>
@@ -204,7 +204,7 @@ export default function CertificationsPage() {
               <CheckCircle className="w-8 h-8 text-green-500" />
               <div>
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {Math.round((earnedCerts.length / certificates.length) * 100)}%
+                  {certificates.length > 0 ? Math.round((earnedCerts.length / certificates.length) * 100) : 0}%
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Completion Rate</div>
               </div>

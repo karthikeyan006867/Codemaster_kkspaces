@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     // Get current user metadata
-    const user = await clerkClient.users.getUser(userId)
+    const user = await (await clerkClient()).users.getUser(userId)
     const currentMetadata = user.publicMetadata as any || {}
     const currentCompletedLessons = currentMetadata.completedLessons || []
     
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     const updatedLessons = Array.from(new Set([...currentCompletedLessons, ...lessonIds]))
 
     // Update user's public metadata in Clerk
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: {
         ...currentMetadata,
         completedLessons: updatedLessons,

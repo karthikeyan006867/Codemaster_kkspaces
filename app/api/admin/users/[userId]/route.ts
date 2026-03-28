@@ -15,7 +15,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const targetUser = await clerkClient.users.getUser(params.userId)
+    const targetUser = await (await clerkClient()).users.getUser(params.userId)
 
     return NextResponse.json({
       id: targetUser.id,
@@ -56,7 +56,7 @@ export async function PATCH(
     if (publicMetadata !== undefined) updates.publicMetadata = publicMetadata
     if (privateMetadata !== undefined) updates.privateMetadata = privateMetadata
 
-    const updatedUser = await clerkClient.users.updateUser(params.userId, updates)
+    const updatedUser = await (await clerkClient()).users.updateUser(params.userId, updates)
 
     return NextResponse.json({ success: true, user: updatedUser })
   } catch (error) {
@@ -78,7 +78,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    await clerkClient.users.deleteUser(params.userId)
+    await (await clerkClient()).users.deleteUser(params.userId)
 
     return NextResponse.json({ success: true, message: 'User deleted successfully' })
   } catch (error) {

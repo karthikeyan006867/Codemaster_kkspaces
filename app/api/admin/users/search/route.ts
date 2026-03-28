@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { query, filters } = body
 
-    const users = await clerkClient.users.getUserList({ limit: 500 })
+    const users = await (await clerkClient()).users.getUserList({ limit: 500 })
     
     let filteredUsers = users.data
 

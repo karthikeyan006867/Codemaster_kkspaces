@@ -10,7 +10,7 @@ export async function DELETE() {
     }
 
     // Get the current user to check if admin
-    const currentUser = await clerkClient.users.getUser(userId)
+    const currentUser = await (await clerkClient()).users.getUser(userId)
     const adminEmails = ['kaarthii009.g@gmail.com', 'karthii009.g@gmail.com']
     const isAdmin = currentUser.emailAddresses[0]?.emailAddress && adminEmails.includes(currentUser.emailAddresses[0].emailAddress)
 
@@ -19,7 +19,7 @@ export async function DELETE() {
     }
 
     // Fetch all users except admins
-    const { data: allUsers } = await clerkClient.users.getUserList({ limit: 500 })
+    const { data: allUsers } = await (await clerkClient()).users.getUserList({ limit: 500 })
     
     let deletedCount = 0
     for (const user of allUsers) {
@@ -27,7 +27,7 @@ export async function DELETE() {
       // Don't delete admin users
       if (!adminEmails.includes(userEmail || '')) {
         try {
-          await clerkClient.users.deleteUser(user.id)
+          await (await clerkClient()).users.deleteUser(user.id)
           deletedCount++
         } catch (error) {
           console.error(`Failed to delete user ${user.id}:`, error)

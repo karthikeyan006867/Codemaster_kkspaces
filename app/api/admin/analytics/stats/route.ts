@@ -12,7 +12,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const users = await clerkClient.users.getUserList({ limit: 500 })
+    const users = await (await clerkClient()).users.getUserList({ limit: 500 })
     
     let totalLessons = 0
     let totalPoints = 0

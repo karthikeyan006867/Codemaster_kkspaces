@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId is required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const currentMetadata = targetUser.publicMetadata as any || {}
 
     const updates: any = { ...currentMetadata }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     updates.adminModifiedBy = email
     updates.adminModifiedAt = new Date().toISOString()
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: updates
     })
 

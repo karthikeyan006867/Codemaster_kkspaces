@@ -19,14 +19,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId and key required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const metadata = targetUser.publicMetadata as any || {}
 
     metadata[key] = value
     metadata[`${key}_updatedAt`] = new Date().toISOString()
     metadata[`${key}_updatedBy`] = email
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: metadata
     })
 

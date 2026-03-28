@@ -13,25 +13,33 @@ import { CheckCircle2, Clock, ArrowRight, BookOpen, Lock, Award } from 'lucide-r
 export default function CoursePage({ params }: { params: { courseId: string } }) {
   const { user, isLoaded } = useUser()
   const course = courses.find(c => c.id === params.courseId)
-  const { isLessonCompleted, isLessonUnlocked, setUserId, loadProgressFromServer, completedLessons } = useProgressStore()
+  const { isLessonCompleted, isLessonUnlocked, setUserId, loadProgressFromServer, completedLessons, isProgressLoaded } = useProgressStore()
 
   // Load user progress from server when user is loaded
   useEffect(() => {
     if (isLoaded && user) {
       setUserId(user.id)
-      // Load progress from server only once when user loads
-      loadProgressFromServer()
+      void loadProgressFromServer()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, user])
 
-  // Log when completedLessons changes for debugging
-  useEffect(() => {
-    console.log('Completed lessons updated:', completedLessons.length)
-  }, [completedLessons])
-
   if (!course) {
     notFound()
+  }
+
+  if (!isProgressLoaded) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <Sidebar />
+        <main className="ml-0 md:ml-64 pt-16 transition-all duration-300">
+          <div className="max-w-6xl mx-auto px-4 py-16 text-center text-gray-300">
+            Loading course progress...
+          </div>
+        </main>
+      </div>
+    )
   }
 
   return (

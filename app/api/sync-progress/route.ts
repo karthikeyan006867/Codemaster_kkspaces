@@ -43,7 +43,7 @@ export const POST = withApiSecurity(
       const safeTimeSpent = Math.max(0, Math.min(Number(timeSpent) || 0, 100000000))
 
       // Update user's public metadata in Clerk with validated data
-      await clerkClient.users.updateUserMetadata(userId, {
+      await (await clerkClient()).users.updateUserMetadata(userId, {
         publicMetadata: {
           completedLessons: safeCompletedLessons,
           completedChallenges: safeCompletedChallenges,

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       try {
         const { userId, publicMetadata } = backupUser
         
-        await clerkClient.users.updateUserMetadata(userId, {
+        await (await clerkClient()).users.updateUserMetadata(userId, {
           publicMetadata: {
             ...publicMetadata,
             restoredAt: new Date().toISOString(),

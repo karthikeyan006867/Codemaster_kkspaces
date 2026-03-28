@@ -10,7 +10,7 @@ export async function DELETE() {
     }
 
     // Delete the user from Clerk
-    await clerkClient.users.deleteUser(userId)
+    await (await clerkClient()).users.deleteUser(userId)
 
     return NextResponse.json({ 
       success: true, 

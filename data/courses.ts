@@ -84,7 +84,80 @@ export interface Course {
   lessons: Lesson[]
 }
 
-export const courses: Course[] = [
+const GENERIC_HINTS = new Set([
+  'Review the documentation',
+  'Practice regularly',
+  'Test your code',
+  'Study the documentation'
+])
+
+const PLACEHOLDER_CODE_REGEX = /write\s+your\s+.+?code\s+here|todo|your\s+code\s+here/i
+
+function getBaselineTestCases(language: Lesson['language'], lessonTitle: string): TestCase[] {
+  return [
+    {
+      name: 'Solution is substantial',
+      test: (code: string) => {
+        const trimmed = code.trim()
+        return trimmed.length >= 40 && !PLACEHOLDER_CODE_REGEX.test(trimmed)
+      },
+      errorMessage: `Add a real solution for ${lessonTitle}, not placeholder text.`
+    },
+    {
+      name: 'Uses language syntax',
+      test: (code: string) => {
+        const normalized = code.toLowerCase()
+        if (language === 'html') return /<\w+/.test(code)
+        if (language === 'css') return /\{|\}|:/.test(code)
+        if (language === 'sql') return /select|insert|update|delete|create|alter/.test(normalized)
+        if (language === 'bash' || language === 'powershell') return /\$|echo|if|for|while/.test(normalized)
+        return /function|const|let|class|def|import|return|if|for|while|=>/.test(normalized)
+      },
+      errorMessage: `Use actual ${language} syntax constructs in your solution.`
+    },
+    {
+      name: 'Multi-line implementation',
+      test: (code: string) => code.split('\n').filter(line => line.trim().length > 0).length >= 3,
+      errorMessage: 'Write at least 3 non-empty lines to demonstrate the concept thoroughly.'
+    }
+  ]
+}
+
+function hasWeakTests(testCases?: TestCase[]): boolean {
+  if (!testCases || testCases.length === 0) return true
+
+  const names = testCases.map(t => t.name.toLowerCase())
+  const hasTrivialNames = names.some(n => n.includes('not empty') || n.includes('has content') || n.includes('looks valid'))
+  return hasTrivialNames
+}
+
+function improveHints(hints: string[] | undefined, title: string): string[] {
+  const baseHints = (hints || []).filter(h => !GENERIC_HINTS.has(h))
+  if (baseHints.length >= 2) return baseHints
+
+  return [
+    `Break ${title} into small steps and implement one requirement at a time.`,
+    'Run your code after each change to verify behavior before moving forward.',
+    'Refactor variable names and structure so another learner can read your solution quickly.'
+  ]
+}
+
+function enhanceLessons(lessons: Lesson[]): Lesson[] {
+  return lessons.map(lesson => {
+    const baseline = getBaselineTestCases(lesson.language, lesson.title)
+    const testCases = hasWeakTests(lesson.testCases)
+      ? baseline
+      : [...baseline, ...(lesson.testCases || []).filter(t => !baseline.some(b => b.name === t.name))]
+
+    return {
+      ...lesson,
+      hints: improveHints(lesson.hints, lesson.title),
+      testCases
+    }
+  })
+}
+
+const baseCourses: Course[] = [
   {
     id: 'html',
     title: 'HTML Fundamentals',
@@ -636,3 +709,8 @@ export const courses: Course[] = [
     lessons: cybersecurityLessons
   }
 ]
+
+export const courses: Course[] = baseCourses.map((course): Course => ({
+  ...course,
+  lessons: enhanceLessons(course.lessons)
+}))

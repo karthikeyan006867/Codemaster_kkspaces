@@ -17,8 +17,8 @@ export async function GET(request: Request) {
     const days = parseInt(searchParams.get('days') || '30')
 
     const users = userId 
-      ? [await clerkClient.users.getUser(userId)]
-      : (await clerkClient.users.getUserList({ limit: 100 })).data
+      ? [await (await clerkClient()).users.getUser(userId)]
+      : (await (await clerkClient()).users.getUserList({ limit: 100 })).data
 
     const activities = []
     const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000)

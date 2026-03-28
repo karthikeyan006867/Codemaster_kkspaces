@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
-import { Clock, AlertTriangle, CheckCircle, XCircle, Award, Eye, EyeOff } from 'lucide-react'
+import { Clock, AlertTriangle, CheckCircle, XCircle, Award, Eye } from 'lucide-react'
 import { courses } from '@/data/courses'
 
 // Define CourseTest type for client-side (without correctAnswer field)
@@ -84,12 +84,23 @@ export default function CertificationTestPage() {
           console.error('Failed to check admin status:', error)
         }
 
+        // Fetch latest progress from server to avoid stale client metadata
+        let completedLessons: string[] = []
+        try {
+          const progressResponse = await fetch('/api/sync-progress/get', {
+            cache: 'no-store'
+          })
+          const progressData = await progressResponse.json()
+          if (progressData?.success && progressData?.progress) {
+            completedLessons = progressData.progress.completedLessons || []
+          }
+        } catch (error) {
+          console.error('Failed to load progress for test gating:', error)
+        }
+
         // Check lesson and project completion
         const course = courses.find(c => c.id === courseId)
         if (course) {
-          const metadata = user.publicMetadata as any || {}
-          const completedLessons = metadata.completedLessons || []
-          
           // Separate project lessons from regular lessons
           const regularLessons = course.lessons.filter(l => !l.isProject)
           const projectLessons = course.lessons.filter(l => l.isProject)
@@ -108,7 +119,7 @@ export default function CertificationTestPage() {
           try {
             const response = await fetch(`/api/test-attempts/${courseId}`)
             const data = await response.json()
-            setAttemptsLeft(loadedTest.maxAttempts - (data.attempts || 0))
+            setAttemptsLeft(Math.max(loadedTest.maxAttempts - (data.attempts || 0), 0))
           } catch (error) {
             console.error('Failed to load attempts:', error)
           }
@@ -127,7 +138,7 @@ export default function CertificationTestPage() {
     setAnswers(newAnswers)
   }
 
-  const handleTestEnd = useCallback(async (failed = false) => {
+  const handleTestEnd = useCallback(async (failed = false, reason?: string) => {
     if (timerRef.current) clearInterval(timerRef.current)
     
     setTestCompleted(true)
@@ -149,6 +160,9 @@ export default function CertificationTestPage() {
         
         if (result.success) {
           setScore(result.score)
+          if (test) {
+            setAttemptsLeft(Math.max(test.maxAttempts - (result.attempts || 0), 0))
+          }
           // Score is calculated server-side, no client-side calculation
         }
       } catch (error) {
@@ -163,11 +177,17 @@ export default function CertificationTestPage() {
           body: JSON.stringify({
             courseId,
             failed: true,
-            failReason,
+            failReason: reason || failReason,
             tabSwitches: tabSwitchCount,
             answers: []
           })
         })
+
+        if (test) {
+          const attemptsResponse = await fetch(`/api/test-attempts/${courseId}`)
+          const attemptsData = await attemptsResponse.json()
+          setAttemptsLeft(Math.max(test.maxAttempts - (attemptsData.attempts || 0), 0))
+        }
       } catch (error) {
         console.error('Failed to save failed attempt:', error)
       }
@@ -187,7 +207,7 @@ export default function CertificationTestPage() {
         setTestFailed(true)
         const reason = 'Test terminated: You switched tabs or minimized the window'
         setFailReason(reason)
-        handleTestEnd(true)
+        void handleTestEnd(true, reason)
       }
     }
 
@@ -198,7 +218,7 @@ export default function CertificationTestPage() {
         setTestFailed(true)
         const reason = 'Test terminated: Window lost focus'
         setFailReason(reason)
-        handleTestEnd(true)
+        void handleTestEnd(true, reason)
       }
     }
 
@@ -219,7 +239,9 @@ export default function CertificationTestPage() {
       setTimeRemaining(prev => {
         if (prev <= 1) {
           setTestFailed(true)
-          setFailReason('Time expired')
+          const reason = 'Time expired'
+          setFailReason(reason)
+          void handleTestEnd(true, reason)
           return 0
         }
         return prev - 1
@@ -229,7 +251,7 @@ export default function CertificationTestPage() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [testStarted, testCompleted, testFailed])
+  }, [testStarted, testCompleted, testFailed, handleTestEnd])
 
   // Prevent right-click and copy-paste
   useEffect(() => {
@@ -250,6 +272,8 @@ export default function CertificationTestPage() {
   }, [testStarted, testCompleted])
 
   const startTest = () => {
+    if (!test) return
+
     if (attemptsLeft <= 0) {
       alert('You have exhausted all attempts for this test')
       return
@@ -262,7 +286,7 @@ export default function CertificationTestPage() {
     }
     
     setTestStarted(true)
-    setAnswers(new Array(test!.questions.length).fill(-1))
+    setAnswers(new Array(test.questions.length).fill(-1))
   }
 
   const formatTime = (seconds: number) => {
@@ -314,7 +338,7 @@ export default function CertificationTestPage() {
                 <h3 className="text-lg font-semibold text-white mb-4">Violation Details:</h3>
                 <div className="space-y-2 text-gray-300">
                   <p>• Tab switches detected: {tabSwitchCount}</p>
-                  <p>• Attempts remaining: {attemptsLeft - 1}</p>
+                  <p>• Attempts remaining: {attemptsLeft}</p>
                   <p>• Test integrity: Compromised</p>
                 </div>
               </div>
@@ -364,7 +388,7 @@ export default function CertificationTestPage() {
                 </div>
                 <div className="bg-gray-800 rounded-lg p-4">
                   <div className="text-gray-400 text-sm">Attempts Left</div>
-                  <div className="text-2xl font-bold text-yellow-500">{attemptsLeft}/3</div>
+                  <div className="text-2xl font-bold text-yellow-500">{attemptsLeft}/{test.maxAttempts}</div>
                 </div>
               </div>
 
@@ -380,7 +404,7 @@ export default function CertificationTestPage() {
                       <li><strong>Do NOT close or refresh the browser - test will auto-fail</strong></li>
                       <li>Right-click and copy-paste are disabled</li>
                       <li>You must score {test.passingScore}% or higher to pass</li>
-                      <li>After 3 failed attempts, you cannot retake this test</li>
+                      <li>After {test.maxAttempts} failed attempts, you cannot retake this test</li>
                     </ul>
                   </div>
                 </div>
@@ -500,7 +524,7 @@ export default function CertificationTestPage() {
                   </div>
                   <div>
                     <div className="text-gray-400">Attempts Left</div>
-                    <div className="text-2xl font-bold text-yellow-500">{attemptsLeft - 1}</div>
+                    <div className="text-2xl font-bold text-yellow-500">{attemptsLeft}</div>
                   </div>
                 </div>
               </div>
@@ -513,12 +537,12 @@ export default function CertificationTestPage() {
                   >
                     View Certificate
                   </button>
-                ) : attemptsLeft > 1 ? (
+                ) : attemptsLeft > 0 ? (
                   <button
                     onClick={() => window.location.reload()}
                     className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white font-semibold hover:shadow-lg transition"
                   >
-                    Try Again ({attemptsLeft - 1} attempts left)
+                    Try Again ({attemptsLeft} attempts left)
                   </button>
                 ) : null}
                 

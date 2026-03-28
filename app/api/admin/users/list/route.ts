@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '100')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    const users = await clerkClient.users.getUserList({
+    const users = await (await clerkClient()).users.getUserList({
       limit,
       offset,
     })

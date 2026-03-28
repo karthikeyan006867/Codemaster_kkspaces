@@ -19,13 +19,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'userId and tags array required' }, { status: 400 })
     }
 
-    const targetUser = await clerkClient.users.getUser(userId)
+    const targetUser = await (await clerkClient()).users.getUser(userId)
     const metadata = targetUser.publicMetadata as any || {}
     const currentTags = metadata.tags || []
 
     const updatedTags = Array.from(new Set([...currentTags, ...tags]))
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (await clerkClient()).users.updateUserMetadata(userId, {
       publicMetadata: {
         ...metadata,
         tags: updatedTags,
