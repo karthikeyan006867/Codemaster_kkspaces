@@ -1,53 +1,49 @@
 'use client'
 
-import { Download, Monitor, Smartphone, Globe } from 'lucide-react'
+import { Download, Monitor, Smartphone } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
 
 export default function DownloadPage() {
-  const [windowsAvailable, setWindowsAvailable] = useState(false)
-  const [androidAvailable, setAndroidAvailable] = useState(false)
-  const [downloading, setDownloading] = useState<'windows' | 'android' | null>(null)
-  const [checking, setChecking] = useState(true)
-
-  useEffect(() => {
-    const checkDownloads = async () => {
-      try {
-        const windowsCheck = await fetch('/api/download/windows', { method: 'HEAD' })
-        setWindowsAvailable(windowsCheck.ok)
-        
-        const androidCheck = await fetch('/api/download/android', { method: 'HEAD' })
-        setAndroidAvailable(androidCheck.ok)
-      } catch (error) {
-        console.error('Failed to check downloads:', error)
-      } finally {
-        setChecking(false)
+  const handleDownload = (platform: 'windows' | 'android') => {
+    if (platform === 'windows') {
+      // Open PWA install instructions
+      if ('BeforeInstallPromptEvent' in window) {
+        alert('Click the install icon in your browser address bar to install the app!')
+      } else {
+        alert('Open this site in Chrome or Edge, then click the install icon in the address bar')
+      }
+    } else {
+      // For Android, trigger PWA install or guide user
+      if (navigator.userAgent.match(/Android/i)) {
+        // Check if running as PWA already
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+          alert('App is already installed! 🎉')
+        } else {
+          alert('📱 To install:\n1. Tap the menu (⋮) in Chrome\n2. Select "Add to Home screen"\n3. Tap "Add"\n\nThe app will appear on your home screen!')
+        }
+      } else {
+        alert('Open this site on your Android device to install the app')
       }
     }
+  }
 
-    checkDownloads()
-  }, [])
-
-  const handleDownload = async (platform: 'windows' | 'android') => {
-    setDownloading(platform)
-    
-    try {
-      const endpoint = platform === 'windows' ? '/api/download/windows' : '/api/download/android'
-      const filename = platform === 'windows' ? 'flavor-town-setup.msi' : 'flavor-town.apk'
-      
-      const link = document.createElement('a')
-      link.href = endpoint
-      link.download = filename
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-    } catch (error) {
-      console.error('Download failed:', error)
-      alert('Download failed. Please try again or contact support.')
-    } finally {
-      setDownloading(null)
+  const handleInstallPWA = async () => {
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      alert('App is already installed! 🎉')
+      return
     }
+
+    alert('📱 Install Instructions:\n\n' +
+      'Android (Chrome):\n' +
+      '1. Tap menu (⋮) → "Add to Home screen"\n' +
+      '2. Tap "Add"\n\n' +
+      'iPhone/iPad (Safari):\n' +
+      '1. Tap share button\n' +
+      '2. Scroll down → "Add to Home Screen"\n\n' +
+      'Desktop (Chrome/Edge):\n' +
+      '1. Click install icon in address bar\n' +
+      '2. Click "Install"')
   }
 
   return (
@@ -84,30 +80,13 @@ export default function DownloadPage() {
             </ul>
             <button
               onClick={() => handleDownload('windows')}
-              disabled={!windowsAvailable || downloading === 'windows' || checking}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              {downloading === 'windows' ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Downloading...
-                </>
-              ) : checking ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Checking...
-                </>
-              ) : !windowsAvailable ? (
-                <>Build Required</>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  Download for Windows
-                </>
-              )}
+              <Download className="w-5 h-5" />
+              Download for Windows
             </button>
             <p className="text-xs text-gray-500 text-center mt-4">
-              {windowsAvailable ? 'Windows 10/11 • 64-bit • Free' : 'Run: npm run tauri:build:windows'}
+              Windows 10/11 • 64-bit • Free
             </p>
           </div>
 
@@ -128,143 +107,42 @@ export default function DownloadPage() {
               <li>✓ Mobile-optimized interface</li>
               <li>✓ Code on the go</li>
               <li>✓ Cloud sync</li>
-              <li>✓ Native Android app</li>
+              <li>✓ Push notifications</li>
             </ul>
             <button
               onClick={() => handleDownload('android')}
-              disabled={!androidAvailable || downloading === 'android' || checking}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              {downloading === 'android' ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Downloading...
-                </>
-              ) : checking ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Checking...
-                </>
-              ) : !androidAvailable ? (
-                <>Build Required</>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  Download APK
-                </>
-              )}
+              <Download className="w-5 h-5" />
+              Install App
             </button>
             <p className="text-xs text-gray-500 text-center mt-4">
-              {androidAvailable ? 'Android 8.0+ • Free • Direct Install' : 'Run: node scripts/build-android-apk.js'}
+              Android 8.0+ • Free • Instant Install
             </p>
-            {androidAvailable && (
-              <p className="text-xs text-center mt-2 text-green-400">
-                ✅ APK Ready - Click to download
-              </p>
-            )}
+            <p className="text-xs text-center mt-2 text-blue-400">
+              💡 Use Add to Home Screen for instant app
+            </p>
           </div>
         </div>
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-            Download Flavor Town
-          </h1>
-          <p className="text-xl text-gray-300">
-            Native apps for Windows and Android
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Windows Desktop App */}
-          <div className="glass-effect rounded-2xl p-8 hover:scale-105 transition-transform duration-300">
-            <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center">
-                <Monitor className="w-12 h-12 text-white" />
-              </div>
-            </div>
-            <h2 className="text-3xl font-bold text-white text-center mb-4">
-              Windows
-            </h2>
-            <p className="text-gray-300 text-center mb-6">
-              Full desktop experience with native performance
+        {/* Quick Install Button */}
+        <div className="mt-12 text-center">
+          <div className="glass-effect rounded-2xl p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              ⚡ Quick Install (Recommended)
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Install Flavor Town instantly as a Progressive Web App - no app store needed!
             </p>
-            <ul className="text-gray-400 space-y-2 mb-8">
-              <li>✓ Native Windows application</li>
-              <li>✓ Blazing fast performance</li>
-              <li>✓ Offline support</li>
-              <li>✓ Auto-sync progress</li>
-            </ul>
             <button
-              onClick={() => handleDownload('windows')}
-              disabled={!windowsAvailable || downloading === 'windows' || checking}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleInstallPWA}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 text-lg"
             >
-              {downloading === 'windows' ? (
-                <>
-                  <Download className="w-5 h-5 animate-bounce" />
-                  Downloading...
-                </>
-              ) : checking ? (
-                <>Checking...</>
-              ) : !windowsAvailable ? (
-                <>Build Required</>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  Download for Windows
-                </>
-              )}
+              <Download className="w-6 h-6" />
+              Install Now
             </button>
-            <p className="text-xs text-gray-500 text-center mt-4">
-              {windowsAvailable ? 'Windows 10/11 • 64-bit • Free' : 'Run: npm run build:windows'}
-            </p>
-          </div>
-
-          {/* Android App */}
-          <div className="glass-effect rounded-2xl p-8 hover:scale-105 transition-transform duration-300">
-            <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center">
-                <Smartphone className="w-12 h-12 text-white" />
-              </div>
-            </div>
-            <h2 className="text-3xl font-bold text-white text-center mb-4">
-              Android
-            </h2>
-            <p className="text-gray-300 text-center mb-6">
-              Learn coding on the go with native Android app
-            </p>
-            <ul className="text-gray-400 space-y-2 mb-8">
-              <li>✓ Native Android app</li>
-              <li>✓ Mobile-optimized interface</li>
-              <li>✓ Code anywhere, anytime</li>
-              <li>✓ Cloud sync</li>
-            </ul>
-            <button
-              onClick={() => handleDownload('android')}
-              disabled={!androidAvailable || downloading === 'android' || checking}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {downloading === 'android' ? (
-                <>
-                  <Download className="w-5 h-5 animate-bounce" />
-                  Downloading...
-                </>
-              ) : checking ? (
-                <>Checking...</>
-              ) : !androidAvailable ? (
-                <>Build Required</>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  Download APK
-                </>
-              )}
-            </button>
-            <p className="text-xs text-gray-500 text-center mt-4">
-              {androidAvailable ? 'Android 8.0+ • Free' : 'Run: npm run build:android'}
+            <p className="text-xs text-gray-400 mt-4">
+              Works on all devices • No downloads • Instant access
             </p>
           </div>
         </div>
@@ -272,11 +150,6 @@ export default function DownloadPage() {
         {/* Web Version */}
         <div className="mt-12 text-center">
           <div className="glass-effect rounded-2xl p-8 max-w-2xl mx-auto">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
-                <Globe className="w-8 h-8 text-white" />
-              </div>
-            </div>
             <h3 className="text-2xl font-bold text-white mb-4">
               Use Web Version
             </h3>
@@ -289,6 +162,37 @@ export default function DownloadPage() {
             >
               Launch Web App
             </Link>
+          </div>
+        </div>
+
+        {/* Installation Instructions */}
+        <div className="mt-12 glass-effect rounded-2xl p-8">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+            How to Install PWA (Progressive Web App)
+          </h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-xl font-semibold text-purple-400 mb-3">
+                Windows (Chrome/Edge)
+              </h4>
+              <ol className="text-gray-300 space-y-2 list-decimal list-inside">
+                <li>Open https://flaver-town-project.vercel.app</li>
+                <li>Click the install icon (⊕) in the address bar</li>
+                <li>Click &quot;Install&quot;</li>
+                <li>App will open in its own window</li>
+              </ol>
+            </div>
+            <div>
+              <h4 className="text-xl font-semibold text-green-400 mb-3">
+                Android (Chrome)
+              </h4>
+              <ol className="text-gray-300 space-y-2 list-decimal list-inside">
+                <li>Open https://flaver-town-project.vercel.app</li>
+                <li>Tap the menu (⋮) in top right</li>
+                <li>Select &quot;Add to Home screen&quot;</li>
+                <li>Tap &quot;Add&quot; to confirm</li>
+              </ol>
+            </div>
           </div>
         </div>
       </div>

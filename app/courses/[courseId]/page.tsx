@@ -25,6 +25,11 @@ export default function CoursePage({ params }: { params: { courseId: string } })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, user])
 
+  // Log when completedLessons changes for debugging
+  useEffect(() => {
+    console.log('Completed lessons updated:', completedLessons.length)
+  }, [completedLessons])
+
   if (!course) {
     notFound()
   }
@@ -72,7 +77,7 @@ export default function CoursePage({ params }: { params: { courseId: string } })
           </div>
 
           {/* Lessons List */}
-          <div className="space-y-4">
+          <div className="space-y-4" key={`lessons-${completedLessons.length}`}>
             <h2 className="text-2xl font-bold mb-6">Course Lessons</h2>
             {course.lessons.map((lesson, index) => {
               const completed = isLessonCompleted(lesson.id)

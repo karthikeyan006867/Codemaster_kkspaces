@@ -1,0 +1,47 @@
+{
+  "api": null,
+  "productName": "coCODEMASTER",
+  "version": "0.1.0",
+  "identifier": "com.kkcodemaster.myapp",
+  "productionSrc": "https://code-with.karthikeyang.me/",
+  "devSrc": "https://code-with.karthikeyang.me/",
+  "beforeDevCommand": "undefined",
+  "beforeBuildCommand": "undefined",
+  "cloudOrgSlug": "CODEMASTER",
+  "cloudAppSlug": "KARTHI",
+  "app": {
+    "icon": "undefined",
+    "windows": [
+      {
+        "label": "main",
+        "width": 1200.0,
+        "height": 800.0,
+        "minWidth": 1000.0,
+        "minHeight": 800.0,
+        "title": "coCODEMASTER",
+        "javascriptDisabled": false,
+        "allowLinkPreview": false,
+        "disableInputAccessoryView": false
+      }
+    ],
+    "singleInstance": false
+  },
+  "publicKey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhDQUVFREM1M0ZENkRDOEEKUldTSzNOWS94ZTJ1ak14M1VnRlJVa2RNeVBLUDNsNzJWYjdmclg0Rm0yT3lvWVZ0OUNTYmtrcFoK",
+  "iOS": null,
+  "android": {
+    "targets": [
+      {
+        "bundle": "aab"
+      }
+    ]
+  },
+  "windows": {
+    "targets": [
+      {
+        "bundle": "nsis"
+      }
+    ]
+  },
+  "linux": null,
+  "macOS": null
+}

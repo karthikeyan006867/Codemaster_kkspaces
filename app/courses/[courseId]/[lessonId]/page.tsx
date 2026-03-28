@@ -41,11 +41,20 @@ export default function LessonPage({
 
   useEffect(() => {
     if (lesson) {
-      setCompleted(isLessonCompleted(lesson.id))
-      setIsUnlocked(isLessonUnlocked(lesson.id, params.courseId))
+      const isCompleted = isLessonCompleted(lesson.id)
+      const isUnlockedNow = isLessonUnlocked(lesson.id, params.courseId)
+      
+      console.log('Lesson status check:', {
+        lessonId: lesson.id,
+        completed: isCompleted,
+        unlocked: isUnlockedNow
+      })
+      
+      setCompleted(isCompleted)
+      setIsUnlocked(isUnlockedNow)
       
       // Redirect if lesson is locked
-      if (!isLessonUnlocked(lesson.id, params.courseId)) {
+      if (!isUnlockedNow) {
         router.push(`/courses/${params.courseId}`)
       }
     }

@@ -106,9 +106,9 @@ export default function Certificate({
       {/* Certificate Container */}
       <div 
         ref={certificateRef}
-        className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-12 rounded-lg overflow-hidden"
+        className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-16 rounded-2xl overflow-hidden shadow-2xl"
         style={{
-          boxShadow: '0 20px 60px rgba(0,0,0,0.5), inset 0 0 100px rgba(255,215,0,0.1)'
+          boxShadow: '0 25px 70px rgba(0,0,0,0.6), inset 0 0 120px rgba(59,130,246,0.15), 0 0 0 1px rgba(255,215,0,0.2)'
         }}
       >
         {/* Decorative Corner Elements */}
@@ -164,11 +164,14 @@ export default function Certificate({
         {/* Content */}
         <div className="relative z-10 text-center">
           {/* Certificate Title */}
-          <div className="mb-8">
-            <h1 className="text-5xl md:text-6xl font-serif text-white mb-2 tracking-wider" style={{ fontFamily: 'Georgia, serif' }}>
-              Certificate
-            </h1>
-            <p className="text-gray-300 text-lg tracking-widest">OF COMPLETION</p>
+          <div className="mb-10">
+            <div className="inline-block">
+              <h1 className="text-6xl md:text-7xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400 mb-3 tracking-wide" style={{ fontFamily: 'Georgia, serif', textShadow: '0 0 30px rgba(251,191,36,0.3)' }}>
+                Certificate
+              </h1>
+              <div className="h-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"></div>
+            </div>
+            <p className="text-gray-300 text-xl tracking-[0.3em] mt-4 font-light">OF COMPLETION</p>
           </div>
 
           {/* Certificate ID Badge */}
@@ -181,25 +184,28 @@ export default function Certificate({
           </div>
 
           {/* Presentee Info */}
-          <div className="mb-8">
-            <p className="text-gray-400 text-sm uppercase tracking-wider mb-3">This certifies that</p>
-            <h2 className="text-4xl md:text-5xl font-serif text-white mb-6 tracking-wide" style={{ fontFamily: 'Brush Script MT, cursive' }}>
-              {userName}
-            </h2>
-            <p className="text-gray-400 text-sm uppercase tracking-wider mb-3">has successfully completed the</p>
-            <h3 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-6" style={{ minHeight: '2.5rem' }}>
+          <div className="mb-10">
+            <p className="text-gray-400 text-sm uppercase tracking-[0.2em] mb-4 font-light">This certifies that</p>
+            <div className="mb-8 px-8 py-6 bg-gradient-to-r from-transparent via-slate-800/50 to-transparent border-y border-yellow-500/20">
+              <h2 className="text-5xl md:text-6xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-white via-yellow-100 to-white mb-2" style={{ fontFamily: 'Brush Script MT, cursive, Georgia', textShadow: '0 2px 20px rgba(255,255,255,0.2)' }}>
+                {userName}
+              </h2>
+            </div>
+            <p className="text-gray-400 text-sm uppercase tracking-[0.2em] mb-4 font-light">has successfully completed the</p>
+            <h3 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 mb-8 px-4" style={{ minHeight: '2.5rem', textShadow: '0 0 20px rgba(59,130,246,0.3)' }}>
               {courseName || 'Course Name'} Course
             </h3>
           </div>
 
           {/* Skills Section */}
-          <div className="mb-8">
-            <p className="text-gray-400 text-sm uppercase tracking-wider mb-3">Demonstrating proficiency in</p>
-            <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
+          <div className="mb-10">
+            <p className="text-gray-400 text-sm uppercase tracking-[0.2em] mb-5 font-light">Demonstrating proficiency in</p>
+            <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
               {skills.map((skill, index) => (
                 <span 
                   key={index}
-                  className="px-4 py-1 bg-slate-700/50 border border-yellow-500/30 rounded-full text-yellow-300 text-sm"
+                  className="px-5 py-2 bg-gradient-to-r from-slate-800/80 to-slate-700/80 border border-yellow-500/40 rounded-full text-yellow-200 text-sm font-medium shadow-lg hover:shadow-yellow-500/20 transition-shadow"
+                  style={{ boxShadow: '0 2px 10px rgba(234,179,8,0.1)' }}
                 >
                   {skill}
                 </span>
@@ -209,48 +215,56 @@ export default function Certificate({
 
           {/* Test Score Badge */}
           {testScore !== undefined && testScore > 0 && (
-            <div className="mb-8">
-              <div className="inline-block bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-3 rounded-lg shadow-lg">
-                <p className="text-white text-sm uppercase tracking-wider mb-1">Final Test Score</p>
-                <p className="text-white text-3xl font-bold">{testScore}%</p>
+            <div className="mb-10">
+              <div className="inline-block relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-xl blur-xl opacity-30"></div>
+                <div className="relative bg-gradient-to-r from-green-600 to-emerald-600 px-10 py-4 rounded-xl shadow-2xl border border-green-400/30">
+                  <p className="text-green-100 text-xs uppercase tracking-[0.2em] mb-2 font-light">Final Test Score</p>
+                  <p className="text-white text-4xl font-bold">{testScore}<span className="text-2xl">%</span></p>
+                </div>
               </div>
             </div>
           )}
 
           {/* Badge and Signatures */}
-          <div className="flex items-center justify-between max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-700">
+          <div className="flex items-center justify-between max-w-4xl mx-auto mt-14 pt-10 border-t border-gradient-to-r from-transparent via-gray-600 to-transparent">
             {/* Date */}
-            <div className="text-left">
-              <div className="flex items-center gap-2 text-gray-400 mb-2">
-                <Calendar className="h-4 w-4" />
-                <span className="text-xs uppercase tracking-wider">Completion Date</span>
+            <div className="text-left flex-1">
+              <div className="flex items-center gap-2 text-gray-400 mb-3">
+                <Calendar className="h-5 w-5 text-blue-400" />
+                <span className="text-xs uppercase tracking-[0.15em] font-light">Completion Date</span>
               </div>
-              <p className="text-white font-semibold">{completionDate}</p>
+              <p className="text-white font-semibold text-lg">{completionDate}</p>
+              <div className="w-24 h-0.5 bg-gradient-to-r from-blue-400 to-transparent mt-2"></div>
             </div>
 
             {/* Central Badge */}
-            <div className="flex-shrink-0">
-              <div className="relative w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
-                <div className="absolute inset-1 bg-slate-900 rounded-full"></div>
-                <Award className="relative z-10 h-12 w-12 text-yellow-400" />
-                <div className="absolute -bottom-2 bg-yellow-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-full">
-                  {new Date().getFullYear()}
+            <div className="flex-shrink-0 mx-8">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full blur-lg opacity-50"></div>
+                <div className="relative w-28 h-28 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-slate-900">
+                  <div className="absolute inset-2 bg-gradient-to-br from-slate-900 to-slate-800 rounded-full"></div>
+                  <Award className="relative z-10 h-14 w-14 text-yellow-400" />
+                  <div className="absolute -bottom-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 text-xs font-bold px-4 py-1.5 rounded-full shadow-lg border-2 border-slate-900">
+                    {new Date().getFullYear()}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Signature */}
-            <div className="text-right">
-              <div className="flex items-center justify-end gap-2 text-gray-400 mb-2">
-                <CheckCircle className="h-4 w-4" />
-                <span className="text-xs uppercase tracking-wider">Verified</span>
+            <div className="text-right flex-1">
+              <div className="flex items-center justify-end gap-2 text-gray-400 mb-3">
+                <span className="text-xs uppercase tracking-[0.15em] font-light">Verified</span>
+                <CheckCircle className="h-5 w-5 text-green-400" />
               </div>
               <div className="text-white">
-                <div className="font-serif text-xl mb-1" style={{ fontFamily: 'Brush Script MT, cursive' }}>
-                  CodeMaster
+                <div className="font-serif text-2xl mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500" style={{ fontFamily: 'Brush Script MT, cursive, Georgia' }}>
+                  Flaver Town
                 </div>
-                <div className="text-xs text-gray-400">Platform Administrator</div>
+                <div className="text-xs text-gray-400 font-light tracking-wide">Learning Platform</div>
               </div>
+              <div className="w-24 h-0.5 bg-gradient-to-l from-green-400 to-transparent mt-2 ml-auto"></div>
             </div>
           </div>
         </div>

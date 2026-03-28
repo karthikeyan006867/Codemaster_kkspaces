@@ -164,8 +164,10 @@ export const useProgressStore = create<ProgressState>()(
           // Check if new week and reset weekly stats
           const isNewWeek = weekStartDate !== currentWeekStart
           
+          const newCompletedLessons = [...completedLessons, lessonId]
+          
           set({
-            completedLessons: [...completedLessons, lessonId],
+            completedLessons: newCompletedLessons,
             totalPoints: totalPoints + 100,
             weeklyLessons: isNewWeek ? 1 : weeklyLessons + 1,
             weeklyPoints: isNewWeek ? 100 : weeklyPoints + 100,
@@ -173,10 +175,13 @@ export const useProgressStore = create<ProgressState>()(
             weeklyChallenges: isNewWeek ? 0 : get().weeklyChallenges
           })
           
-          console.log('Lesson completed! New total:', totalPoints + 100, 'Total lessons:', completedLessons.length + 1)
+          console.log('Lesson completed! New total:', totalPoints + 100, 'Total lessons:', newCompletedLessons.length)
           
-          // Update course progress
-          get().updateCourseProgress(courseId)
+          // Update course progress immediately with new state
+          setTimeout(() => {
+            get().updateCourseProgress(courseId)
+            console.log('Course progress updated for:', courseId)
+          }, 50)
           
           // Update streak
           get().updateStreak()
@@ -189,6 +194,8 @@ export const useProgressStore = create<ProgressState>()(
             console.log('Starting sync after lesson completion...')
             syncProgressToClerk(get())
           }, 500)
+        } else {
+          console.log('Lesson already completed, skipping')
         }
       },
 
